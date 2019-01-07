@@ -18,7 +18,7 @@
    <children>
       <AnchorPane prefHeight="400.0" prefWidth="400.0">
          <children>
-            <Button fx:id="play" alignment="CENTER" contentDisplay="CENTER" layoutX="186.0" layoutY="358.0" maxHeight="28.0" maxWidth="28.0" minHeight="28.0" minWidth="28.0" mnemonicParsing="false" onAction="#handlePlayPause" textAlignment="CENTER" />
+            <Button fx:id="play" alignment="CENTER" contentDisplay="CENTER" layoutX="184.0" layoutY="354.0" maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" mnemonicParsing="false" onAction="#handlePlayPause" textAlignment="CENTER" />
          </children>
       </AnchorPane>
    </children>

@@ -3,6 +3,7 @@ package sample;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -17,28 +18,27 @@ public class Controller {
     private String playPath = new File("src/sample/media/Play.png").getAbsolutePath();
     private String pausePath = new File("src/sample/media/Pause.png").getAbsolutePath();
     private String stopPath = new File("src/sample/media/Stop.png").getAbsolutePath();
+    private Image playPauseImg = new Image(new File(playPath).toURI().toString());
 
     public void initialize()
     {
-        Image playImg = new Image(new File(playPath).toURI().toString());
-        play.setGraphic(new ImageView(playImg));
+        play.setContentDisplay(ContentDisplay.CENTER);
+        play.setGraphic(new ImageView(playPauseImg));
     }
 
     @FXML
     private void handlePlayPause (ActionEvent event)
     {
-        Image playImg = new Image(new File(playPath).toURI().toString());
         if(isPlaying)
         {
             isPlaying = false;
-            playImg = new Image(new File(playPath).toURI().toString());
+            playPauseImg = new Image(new File(playPath).toURI().toString());
         }
         else if (!isPlaying)
         {
             isPlaying = true;
-            playImg = new Image(new File(pausePath).toURI().toString());
+            playPauseImg = new Image(new File(pausePath).toURI().toString());
         }
-        play.setGraphic(new ImageView(playImg));
-        System.out.println(isPlaying);
+        play.setGraphic(new ImageView(playPauseImg));
     }
 }
