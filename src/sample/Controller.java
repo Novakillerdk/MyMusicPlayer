@@ -6,13 +6,22 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 
 import java.io.File;
 
 public class Controller {
 
     @FXML
-    private Button play;
+    private Button playPause;
+
+    @FXML
+    private MediaView mediaPlayer;
+
+    private MediaPlayer mp;
+    private Media me;
 
     private boolean isPlaying = false;
     private String playPath = new File("src/sample/media/Play.png").getAbsolutePath();
@@ -22,8 +31,20 @@ public class Controller {
 
     public void initialize()
     {
-        play.setContentDisplay(ContentDisplay.CENTER);
-        play.setGraphic(new ImageView(playPauseImg));
+        playPause.setContentDisplay(ContentDisplay.CENTER);
+        playPause.setGraphic(new ImageView(playPauseImg));
+
+        // Build the path to the location of the media file
+        String path = new File("src/sample/media/pizza_time.mp3").getAbsolutePath();
+        // Create new Media object (the actual media content)
+        me = new Media(new File(path).toURI().toString());
+        // Create new MediaPlayer and attach the media to be played
+        mp = new MediaPlayer(me);
+        //
+        mediaPlayer.setMediaPlayer(mp);
+        // mp.setAutoPlay(true);
+        // If autoplay is turned of the method play(), stop(), pause() etc controls how/when medias are played
+        mp.setAutoPlay(false);
     }
 
     @FXML
@@ -33,12 +54,14 @@ public class Controller {
         {
             isPlaying = false;
             playPauseImg = new Image(new File(playPath).toURI().toString());
+            mp.pause();
         }
         else if (!isPlaying)
         {
             isPlaying = true;
             playPauseImg = new Image(new File(pausePath).toURI().toString());
+            mp.play();
         }
-        play.setGraphic(new ImageView(playPauseImg));
+        playPause.setGraphic(new ImageView(playPauseImg));
     }
 }
