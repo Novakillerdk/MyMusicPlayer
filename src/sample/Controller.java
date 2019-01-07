@@ -18,6 +18,9 @@ public class Controller {
     private Button playPause;
 
     @FXML
+    private Button stopButton;
+
+    @FXML
     private MediaView mediaPlayer;
 
     private MediaPlayer mp;
@@ -27,12 +30,17 @@ public class Controller {
     private String playPath = new File("src/sample/media/Play.png").getAbsolutePath();
     private String pausePath = new File("src/sample/media/Pause.png").getAbsolutePath();
     private String stopPath = new File("src/sample/media/Stop.png").getAbsolutePath();
-    private Image playPauseImg = new Image(new File(playPath).toURI().toString());
+    private Image playImg = new Image(new File(playPath).toURI().toString());
+    private Image pauseImg = new Image(new File(pausePath).toURI().toString());
+    private Image stopImg = new Image(new File(stopPath).toURI().toString());
 
     public void initialize()
     {
         playPause.setContentDisplay(ContentDisplay.CENTER);
-        playPause.setGraphic(new ImageView(playPauseImg));
+        playPause.setGraphic(new ImageView(playImg));
+
+        stopButton.setContentDisplay(ContentDisplay.CENTER);
+        stopButton.setGraphic(new ImageView(stopImg));
 
         // Build the path to the location of the media file
         String path = new File("src/sample/media/pizza_time.mp3").getAbsolutePath();
@@ -53,15 +61,25 @@ public class Controller {
         if(isPlaying)
         {
             isPlaying = false;
-            playPauseImg = new Image(new File(playPath).toURI().toString());
+            playPause.setGraphic(new ImageView(playImg));
             mp.pause();
         }
         else if (!isPlaying)
         {
             isPlaying = true;
-            playPauseImg = new Image(new File(pausePath).toURI().toString());
+            playPause.setGraphic(new ImageView(pauseImg));
             mp.play();
         }
-        playPause.setGraphic(new ImageView(playPauseImg));
+    }
+
+    @FXML
+    private void handleStopMedia (ActionEvent event)
+    {
+        if(isPlaying)
+        {
+            isPlaying = false;
+            playPause.setGraphic(new ImageView(playImg));
+        }
+        mp.stop();
     }
 }
