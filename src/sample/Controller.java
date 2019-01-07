@@ -4,13 +4,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.util.ArrayList;
 
 public class Controller {
 
@@ -25,6 +28,10 @@ public class Controller {
 
     private MediaPlayer mp;
     private Media me;
+
+    @FXML
+    private ListView listView;
+
 
     private boolean isPlaying = false;
     private String playPath = new File("src/sample/media/Play.png").getAbsolutePath();
@@ -55,6 +62,15 @@ public class Controller {
         mp.setAutoPlay(false);
     }
 
+
+    public void addSongs()
+    {
+        ArrayList<Songs> trackList;
+        trackList = new ArrayList<Songs>();
+        trackList.add(Songs.pizzaTime);
+        trackList.add(Songs.testTrack);
+    }
+
     @FXML
     private void handlePlayPause (ActionEvent event)
     {
@@ -81,5 +97,12 @@ public class Controller {
             playPause.setGraphic(new ImageView(playImg));
         }
         mp.stop();
+    }
+
+    @FXML
+    private void setListView(ActionEvent event)
+    {
+
+       listView.setItems();
     }
 }
