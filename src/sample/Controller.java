@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -32,6 +34,7 @@ public class Controller {
     @FXML
     private ListView listView;
 
+    private ArrayList<Songs> trackList;
 
     private boolean isPlaying = false;
     private String playPath = new File("src/sample/media/Play.png").getAbsolutePath();
@@ -60,13 +63,15 @@ public class Controller {
         // mp.setAutoPlay(true);
         // If autoplay is turned of the method play(), stop(), pause() etc controls how/when medias are played
         mp.setAutoPlay(false);
+
+        addSongs();
+        setListView();
     }
 
 
     public void addSongs()
     {
-        ArrayList<Songs> trackList;
-        trackList = new ArrayList<Songs>();
+        trackList = new ArrayList<>();
         trackList.add(Songs.pizzaTime);
         trackList.add(Songs.testTrack);
     }
@@ -99,10 +104,9 @@ public class Controller {
         mp.stop();
     }
 
-    @FXML
-    private void setListView(ActionEvent event)
+    private void setListView()
     {
-
-       listView.setItems();
+        ObservableList list=FXCollections.observableArrayList(trackList);
+       listView.setItems(list);
     }
 }
