@@ -22,4 +22,8 @@ public class Songs {
     public String getSong() {
         return song;
     }
+
+    public String getLoc() {
+        return loc;
+    }
 }

@@ -11,11 +11,12 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class Controller {
+public class Controller{
 
     @FXML
     private Button playPause;
@@ -55,6 +56,8 @@ public class Controller {
     private Image pauseImg = new Image(new File(pausePath).toURI().toString());
     private Image stopImg = new Image(new File(stopPath).toURI().toString());
 
+    private String path = new File(Songs.pizzaTime.getLoc()).getAbsolutePath();
+
     public void initialize()
     {
         playPause.setContentDisplay(ContentDisplay.CENTER);
@@ -63,18 +66,10 @@ public class Controller {
         stopButton.setContentDisplay(ContentDisplay.CENTER);
         stopButton.setGraphic(new ImageView(stopImg));
 
-        // Build the path to the location of the media file
-        String path = new File("src/sample/media/pizza_time.mp3").getAbsolutePath();
-        // Create new Media object (the actual media content)
-        me = new Media(new File(path).toURI().toString());
-        // Create new MediaPlayer and attach the media to be played
-        mp = new MediaPlayer(me);
-        //
-        mediaPlayer.setMediaPlayer(mp);
-        // mp.setAutoPlay(true);
-        // If autoplay is turned of the method play(), stop(), pause() etc controls how/when medias are played
-        mp.setAutoPlay(false);
+        path = new File(Songs.pizzaTime.getLoc()).getAbsolutePath();
+        setSong();
 
+        mp.setAutoPlay(false);
 
         addSongs();
         setListView();
@@ -83,23 +78,30 @@ public class Controller {
     @FXML
     private void handleSongs (ActionEvent event)
     {
-        if (track1.isPressed()){
-
+        Button b = (Button) event.getSource();
+        String buttonPressed = b.getText();
+        mp.stop();
+        if (buttonPressed.equals("Play track 1")){
+            path = new File(Songs.pizzaTime.getLoc()).getAbsolutePath();
+            setSong();
         }
-        else if (track2.isPressed())
+        if (buttonPressed.equals("play track 2"))
         {
-
+            path = new File(Songs.testTrack.getLoc()).getAbsolutePath();
+            setSong();
         }
     }
-
+    private void setSong ()
+    {
+        me = new Media(new File(path).toURI().toString());
+        mp = new MediaPlayer(me);
+        mediaPlayer.setMediaPlayer(mp);
+    }
     @FXML
     private void handleProgress (ActionEvent event)
     {
        
     }
-
-
-
     public void addSongs()
     {
         trackList = new ArrayList<>();
