@@ -34,7 +34,7 @@ public class Controller {
     @FXML
     private ListView listView;
 
-    private ArrayList<Songs> trackList;
+    private ArrayList<String> trackList;
 
     private boolean isPlaying = false;
     private String playPath = new File("src/sample/media/Play.png").getAbsolutePath();
@@ -72,8 +72,8 @@ public class Controller {
     public void addSongs()
     {
         trackList = new ArrayList<>();
-        trackList.add(Songs.pizzaTime);
-        trackList.add(Songs.testTrack);
+        trackList.add(Songs.pizzaTime.getSong());
+        trackList.add(Songs.testTrack.getSong());
     }
 
     @FXML
@@ -107,6 +107,6 @@ public class Controller {
     private void setListView()
     {
         ObservableList list=FXCollections.observableArrayList(trackList);
-       listView.setItems(list);
+        listView.setItems(list);
     }
 }
