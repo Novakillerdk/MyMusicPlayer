@@ -1,20 +1,31 @@
 package sample;
 
+import com.sun.xml.internal.ws.api.message.ExceptionHasMessage;
+import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import java.lang.Thread;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Map;
+
 
 public class Controller{
 
@@ -73,6 +84,7 @@ public class Controller{
 
         addSongs();
         setListView();
+       // handleProgress();
     }
 
     @FXML
@@ -84,26 +96,35 @@ public class Controller{
         if (buttonPressed.equals("Play track 1")){
             path = new File(Songs.pizzaTime.getLoc()).getAbsolutePath();
             setSong();
+
+
         }
         if (buttonPressed.equals("play track 2"))
         {
             path = new File(Songs.testTrack.getLoc()).getAbsolutePath();
             setSong();
+
         }
+
     }
+
     private void setSong ()
     {
         me = new Media(new File(path).toURI().toString());
         mp = new MediaPlayer(me);
         mediaPlayer.setMediaPlayer(mp);
     }
-    @FXML
-    private void handleProgress (ActionEvent event)
+
+   private void handleProgress()
     {
-       
+
     }
+
+
+
     public void addSongs()
     {
+
         trackList = new ArrayList<>();
         trackList.add(Songs.pizzaTime.getSong());
         trackList.add(Songs.testTrack.getSong());
@@ -116,6 +137,7 @@ public class Controller{
         {
             isPlaying = false;
             playPause.setGraphic(new ImageView(playImg));
+
             mp.pause();
         }
         else if (!isPlaying)
@@ -123,6 +145,7 @@ public class Controller{
             isPlaying = true;
             playPause.setGraphic(new ImageView(pauseImg));
             mp.play();
+
         }
     }
 
@@ -141,5 +164,24 @@ public class Controller{
     {
         ObservableList list=FXCollections.observableArrayList(trackList);
         listView.setItems(list);
+    }
+
+    public void handlePlaylist(ActionEvent event){
+
+            Button b = (Button) event.getSource();
+            String buttonPressed = b.getText();
+
+            if (buttonPressed.equals("Create new playlist")) {
+
+            }
+
+            if (buttonPressed.equals("View all playlists")) {
+
+            }
+
+            if (buttonPressed.equals("Show all songs")) {
+                setListView();
+            }
+
     }
 }
