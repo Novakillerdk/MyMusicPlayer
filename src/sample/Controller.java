@@ -8,6 +8,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,6 +19,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -77,6 +81,8 @@ public class Controller {
 
         addSongs();
         setListView();
+
+
     }
 
 
@@ -177,7 +183,7 @@ public class Controller {
         mp.stop();
     }
 
-    private void setListView()
+    public void setListView()
     {
         ObservableList list=FXCollections.observableArrayList(trackList);
         listView.setItems(list);
@@ -204,4 +210,29 @@ public class Controller {
             }
         });
     }
+
+    public void handleNewPlaylist(ActionEvent event) throws Exception{
+        try {
+            Stage newPlaylist = new Stage();
+            Parent root1 = FXMLLoader.load(getClass().getResource("CreatePlaylist.fxml"));
+            newPlaylist.setTitle("Hello World");
+            newPlaylist.setScene(new Scene(root1));
+            newPlaylist.show();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void handlePlaylist(ActionEvent event) throws Exception{
+        Stage viewPlaylists = new Stage();
+        Parent root2 = FXMLLoader.load(getClass().getResource("viewPlaylist.fxml"));
+        viewPlaylists.setTitle("Hello World");
+        viewPlaylists.setScene(new Scene(root2));
+        viewPlaylists.show();
+    }
+
+    public void handleAllSongs(ActionEvent actionEvent) {
+        setListView();
+    }
+
 }
