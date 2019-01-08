@@ -1,22 +1,27 @@
 package sample;
 
+import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
-public class Controller{
+public class Controller {
 
     @FXML
     private Button playPause;
@@ -58,8 +63,7 @@ public class Controller{
 
     private String path = new File(Songs.pizzaTime.getLoc()).getAbsolutePath();
 
-    public void initialize()
-    {
+    public void initialize() {
         playPause.setContentDisplay(ContentDisplay.CENTER);
         playPause.setGraphic(new ImageView(playImg));
 
@@ -75,27 +79,56 @@ public class Controller{
         setListView();
     }
 
+
+
     @FXML
-    private void handleSongs (ActionEvent event)
+    private void handlePlayListChoose(MouseEvent arg0)
     {
+        listView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+            public void handle(MouseEvent click) {
+
+                if (click.getButton() == MouseButton.PRIMARY && click.getClickCount() == 2 &&
+                        listView.getFocusModel().getFocusedItem().equals(listView.getSelectionModel().getSelectedItems())) {
+                    System.out.println(listView.getSelectionModel()
+                            .getSelectedItem());
+                }
+            }
+        });
+    }
+    @FXML
+    private void handleSongs(ActionEvent event) {
         Button b = (Button) event.getSource();
         String buttonPressed = b.getText();
         mp.stop();
-        if (buttonPressed.equals("Play track 1")){
+        isPlaying = false;
+        playPause.setGraphic(new ImageView(playImg));
+        if (buttonPressed.equals("Play track 1")) {
             path = new File(Songs.pizzaTime.getLoc()).getAbsolutePath();
             setSong();
+            songName.setText(Songs.pizzaTime.getSong());
         }
-        if (buttonPressed.equals("play track 2"))
-        {
+        if (buttonPressed.equals("play track 2")) {
             path = new File(Songs.testTrack.getLoc()).getAbsolutePath();
             setSong();
+            songName.setText(Songs.testTrack.getSong());
         }
     }
+
     private void setSong ()
     {
         me = new Media(new File(path).toURI().toString());
         mp = new MediaPlayer(me);
         mediaPlayer.setMediaPlayer(mp);
+
+        mp.play();
+        mp.currentTimeProperty().addListener(new InvalidationListener() {
+            @Override
+            public void invalidated(Observable observable) {
+                updatesValues();
+                mp.stop();
+            }
+        });
     }
     @FXML
     private void handleProgress (ActionEvent event)
@@ -123,6 +156,13 @@ public class Controller{
             isPlaying = true;
             playPause.setGraphic(new ImageView(pauseImg));
             mp.play();
+
+            mp.currentTimeProperty().addListener(new InvalidationListener() {
+                @Override
+                public void invalidated(Observable observable) {
+                    updatesValues();
+                }
+            });
         }
     }
 
@@ -141,5 +181,27 @@ public class Controller{
     {
         ObservableList list=FXCollections.observableArrayList(trackList);
         listView.setItems(list);
+    }
+
+
+    private String formatTimer(long formatTime)
+    {
+        return  String.format("%02d : %02d",
+                TimeUnit.MILLISECONDS.toMinutes(formatTime),
+                TimeUnit.MILLISECONDS.toSeconds(formatTime) -
+                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(formatTime)));
+    }
+    private void updatesValues()
+    {
+        Platform.runLater(new Runnable() {
+            public void run()
+            {
+                long secFormat = (long) mp.getCurrentTime().toMillis();
+                currentTime.setText(formatTimer(secFormat));
+
+                long endFormat = (long) mp.getStopTime().toMillis();
+                TTime.setText(formatTimer(endFormat));
+            }
+        });
     }
 }
