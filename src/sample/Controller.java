@@ -4,9 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
@@ -30,6 +28,19 @@ public class Controller {
 
     private MediaPlayer mp;
     private Media me;
+
+    @FXML
+    private Button track1;
+    @FXML
+    private Button track2;
+    @FXML
+    private ProgressBar proBar;
+    @FXML
+    private Label songName;
+    @FXML
+    private Label currentTime;
+    @FXML
+    private Label TTime;
 
     @FXML
     private ListView listView;
@@ -64,9 +75,29 @@ public class Controller {
         // If autoplay is turned of the method play(), stop(), pause() etc controls how/when medias are played
         mp.setAutoPlay(false);
 
+
         addSongs();
         setListView();
     }
+
+    @FXML
+    private void handleSongs (ActionEvent event)
+    {
+        if (track1.isPressed()){
+
+        }
+        else if (track2.isPressed())
+        {
+
+        }
+    }
+
+    @FXML
+    private void handleProgress (ActionEvent event)
+    {
+       
+    }
+
 
 
     public void addSongs()
