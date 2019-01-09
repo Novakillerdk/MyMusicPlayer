@@ -23,6 +23,8 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 public class Controller {
@@ -67,6 +69,8 @@ public class Controller {
 
     private String path = new File(Songs.pizzaTime.getLoc()).getAbsolutePath();
 
+    private Timer updateTimer = new Timer();
+
     public void initialize() {
         playPause.setContentDisplay(ContentDisplay.CENTER);
         playPause.setGraphic(new ImageView(playImg));
@@ -82,8 +86,6 @@ public class Controller {
         addSongs();
         setListView();
     }
-
-
 
     @FXML
     private void handlePlayListChoose(MouseEvent arg0)
@@ -112,6 +114,7 @@ public class Controller {
             }
         });
     }
+
     @FXML
     private void handleSongs(ActionEvent event) {
         Button b = (Button) event.getSource();
@@ -136,16 +139,15 @@ public class Controller {
         mp = new MediaPlayer(me);
         mediaPlayer.setMediaPlayer(mp);
 
-        new java.util.Timer().schedule(
-                new java.util.TimerTask() {
-                    @Override
-                    public void run() {
-                        updatesValues();
-                    }
-                },
-                40
-        );
+        updateTimer = new Timer();
+        TimerTask tt = new TimerTask() {
+            @Override
+            public void run() {
+                updatesValues();
+            }
+        }; updateTimer.schedule(tt,40);
     }
+
     @FXML
     private void handleProgress (ActionEvent event)
     {
@@ -216,6 +218,8 @@ public class Controller {
 
                 long endFormat = (long) mp.getStopTime().toMillis();
                 TTime.setText(formatTimer(endFormat));
+
+                updateTimer.cancel();
             }
         });
     }
