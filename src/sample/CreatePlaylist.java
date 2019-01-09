@@ -41,14 +41,23 @@ public class CreatePlaylist {
 
     }
 
+    /***
+     * Here the user can select which songs
+     * should be added to their playlist
+     * where after they can give the playlist a name
+     * @param event
+     */
     public void handleAllSongs(ActionEvent event) {
 
         Button b = (Button) event.getSource();
         String buttonPressed = b.getText();
         if(buttonPressed.equals("Add")){
 
+
+
         }
         if(buttonPressed.equals("Remove")){
+
 
         }
 
@@ -70,6 +79,17 @@ public class CreatePlaylist {
         String nameOfPlaylist = playlistName.getText();
         System.out.println(nameOfPlaylist);
         playlistName.clear();
+
+        //TODO
+        DB.insertSQL("Insert into project values('"+playlistName+"'");
+        do{
+            String data = DB.getDisplayData();
+            if (data.equals(DB.NOMOREDATA)){
+                break;
+            }else{
+                System.out.print(data);
+            }
+        } while(true);
 
     }
 

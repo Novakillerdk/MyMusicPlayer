@@ -270,7 +270,11 @@ public class Controller {
             new FileChooser.ExtensionFilter("WAV files", "*.wav"));
             File defaultDirectory = new File("src/sample/media");
             chooser.setInitialDirectory(defaultDirectory);
-            File selectedFile = chooser.showOpenDialog(addsongsTo);
+            File openFileBrowser = chooser.showOpenDialog(addsongsTo);
+            File mediaDir = new File(System.getProperty("user.home"), "src/sample/mediaDir");
+            if (!mediaDir.exists()){
+                mediaDir.mkdir();
+            }
             //String filePath = new File("src/sample/media").getAbsolutePath();
             addsongsTo.close();
         }catch (Exception e){

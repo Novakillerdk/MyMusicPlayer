@@ -26,7 +26,13 @@ public class viewPlaylist {
         }
         if(buttonpresed.equals("Remove playlist")){
 
+            //TODO
+            DB.deleteSQL("Delete from project where project_no like 'g%';");
+
         }
 
+    }
+
+    public void handleSendToMain(ActionEvent event) {
     }
 }
