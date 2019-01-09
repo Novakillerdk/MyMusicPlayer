@@ -221,23 +221,28 @@ public class Controller {
     }
 
     public void handleNewPlaylist(ActionEvent event) throws Exception{
-        try {
-            Stage newPlaylist = new Stage();
-            Parent root1 = FXMLLoader.load(getClass().getResource("CreatePlaylist.fxml"));
-            newPlaylist.setTitle("Hello World");
-            newPlaylist.setScene(new Scene(root1));
-            newPlaylist.show();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+           try {
+               Stage newPlaylist = new Stage();
+               Parent root1 = FXMLLoader.load(getClass().getResource("createPlaylist.fxml"));
+               newPlaylist.setTitle("Hello World");
+               newPlaylist.setScene(new Scene(root1));
+               newPlaylist.show();
+           } catch (Exception e){
+               e.printStackTrace();
+           }
+
     }
 
     public void handlePlaylist(ActionEvent event) throws Exception{
-        Stage viewPlaylists = new Stage();
-        Parent root2 = FXMLLoader.load(getClass().getResource("viewPlaylist.fxml"));
-        viewPlaylists.setTitle("Hello World");
-        viewPlaylists.setScene(new Scene(root2));
-        viewPlaylists.show();
+        try {
+            Stage viewPlaylists = new Stage();
+            Parent root2 = FXMLLoader.load(getClass().getResource("viewPlaylist.fxml"));
+            viewPlaylists.setTitle("Hello World");
+            viewPlaylists.setScene(new Scene(root2));
+            viewPlaylists.show();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void handleAllSongs(ActionEvent actionEvent) {
