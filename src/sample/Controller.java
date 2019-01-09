@@ -81,8 +81,6 @@ public class Controller {
 
         addSongs();
         setListView();
-
-
     }
 
 
@@ -94,10 +92,22 @@ public class Controller {
 
             public void handle(MouseEvent click) {
 
-                if (click.getButton() == MouseButton.PRIMARY && click.getClickCount() == 2 &&
-                        listView.getFocusModel().getFocusedItem().equals(listView.getSelectionModel().getSelectedItems())) {
-                    System.out.println(listView.getSelectionModel()
-                            .getSelectedItem());
+                if (click.getButton() == MouseButton.PRIMARY && click.getClickCount() == 2)
+                {
+                    mp.stop();
+                    isPlaying = false;
+                    playPause.setGraphic(new ImageView(playImg));
+                    if(listView.getSelectionModel().getSelectedItem().equals("Pizza"))
+                    {
+                        path = new File(Songs.pizzaTime.getLoc()).getAbsolutePath();
+                        songName.setText(Songs.pizzaTime.getSong());
+                    }
+                    if(listView.getSelectionModel().getSelectedItem().equals("Bongo"))
+                    {
+                        path = new File(Songs.testTrack.getLoc()).getAbsolutePath();
+                        songName.setText(Songs.testTrack.getSong());
+                    }
+                    setSong();
                 }
             }
         });
@@ -111,14 +121,13 @@ public class Controller {
         playPause.setGraphic(new ImageView(playImg));
         if (buttonPressed.equals("Play track 1")) {
             path = new File(Songs.pizzaTime.getLoc()).getAbsolutePath();
-            setSong();
             songName.setText(Songs.pizzaTime.getSong());
         }
         if (buttonPressed.equals("play track 2")) {
             path = new File(Songs.testTrack.getLoc()).getAbsolutePath();
-            setSong();
             songName.setText(Songs.testTrack.getSong());
         }
+        setSong();
     }
 
     private void setSong ()
@@ -127,14 +136,15 @@ public class Controller {
         mp = new MediaPlayer(me);
         mediaPlayer.setMediaPlayer(mp);
 
-        mp.play();
-        mp.currentTimeProperty().addListener(new InvalidationListener() {
-            @Override
-            public void invalidated(Observable observable) {
-                updatesValues();
-                mp.stop();
-            }
-        });
+        new java.util.Timer().schedule(
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        updatesValues();
+                    }
+                },
+                40
+        );
     }
     @FXML
     private void handleProgress (ActionEvent event)
@@ -188,7 +198,6 @@ public class Controller {
         ObservableList list=FXCollections.observableArrayList(trackList);
         listView.setItems(list);
     }
-
 
     private String formatTimer(long formatTime)
     {
