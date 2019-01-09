@@ -3,11 +3,15 @@ package sample;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
-import java.awt.*;
+import javax.swing.text.html.ListView;
 
 public class CreatePlaylist {
 
     @FXML
-    private Button selectPlaylist;
+    private ListView addSongs;
 
+
+    public void handleRefresh(ActionEvent event) {
+
+    }
 }

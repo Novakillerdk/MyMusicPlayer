@@ -9,19 +9,20 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.CreatePlaylist">
    <children>
-      <ListView layoutX="50.0" layoutY="45.0" prefHeight="200.0" prefWidth="200.0" />
-      <ListView layoutX="341.0" layoutY="45.0" prefHeight="200.0" prefWidth="200.0" />
-      <Button layoutX="266.0" layoutY="108.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="59.0" text="Add" />
-      <Button layoutX="266.0" layoutY="133.0" mnemonicParsing="false" text="Remove" />
-      <Button layoutX="274.0" layoutY="175.0" mnemonicParsing="false" text="Clear" />
-      <Label layoutX="126.0" layoutY="23.0" text="All songs" />
-      <Label layoutX="386.0" layoutY="23.0" text="Songs in new playlist" />
-      <Label layoutX="291.0" layoutY="61.0" text="&gt;">
+      <Button layoutX="271.0" layoutY="140.0" mnemonicParsing="false" text="Remove" />
+      <Button layoutX="281.0" layoutY="97.0" mnemonicParsing="false" text="Add" />
+      <Button layoutX="279.0" layoutY="181.0" mnemonicParsing="false" text="Clear" />
+      <ListView layoutX="14.0" layoutY="52.0" prefHeight="200.0" prefWidth="225.0" />
+      <ListView layoutX="361.0" layoutY="52.0" prefHeight="200.0" prefWidth="225.0" />
+      <Label layoutX="292.0" layoutY="62.0" text="&gt;">
          <font>
-            <Font size="18.0" />
+            <Font size="24.0" />
          </font>
       </Label>
-      <TextField layoutX="367.0" layoutY="286.0" promptText="Playlist name" />
-      <Button layoutX="423.0" layoutY="322.0" mnemonicParsing="false" text="Add" />
+      <Label layoutX="85.0" layoutY="24.0" text="Available songs" />
+      <Label layoutX="434.0" layoutY="24.0" text="Selected songs" />
+      <TextField layoutX="399.0" layoutY="298.0" promptText="Playlist name" />
+      <Button layoutX="448.0" layoutY="340.0" mnemonicParsing="false" text="O.K" />
+      <Button fx:id="refreshSongs" layoutX="99.0" layoutY="264.0" mnemonicParsing="false" onAction="#handleRefresh" text="Refresh" />
    </children>
 </AnchorPane>

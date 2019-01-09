@@ -31,6 +31,9 @@
             <Label fx:id="currentTime" layoutX="114.0" layoutY="325.0" text="Time" />
             <Label fx:id="TTime" layoutX="358.0" layoutY="325.0" text="TTime" />
             <ProgressBar fx:id="proBar" layoutX="150.0" layoutY="327.0" prefHeight="17.0" prefWidth="200.0" progress="0.0" />
+            <Button fx:id="createNewPlaylists" layoutX="14.0" layoutY="221.0" mnemonicParsing="false" onAction="#handleNewPlaylist" text="Create new Playlist" />
+            <Button fx:id="allPlaylists" layoutX="14.0" layoutY="258.0" mnemonicParsing="false" onAction="#handlePlaylist" prefHeight="25.0" prefWidth="116.0" text="View all playlists" />
+            <Button fx:id="allSongs" layoutX="14.0" layoutY="294.0" mnemonicParsing="false" onAction="#handleAllSongs" prefHeight="25.0" prefWidth="116.0" text="Show all songs" />
          </children>
       </AnchorPane>
    </children>
