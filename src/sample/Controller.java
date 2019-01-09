@@ -21,6 +21,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 
+import java.io.Closeable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -46,7 +47,7 @@ public class Controller {
     @FXML
     private Button track2;
     @FXML
-    private ProgressBar proBar;
+    private Slider proBar;
     @FXML
     private Label songName;
     @FXML
@@ -57,7 +58,7 @@ public class Controller {
     @FXML
     private ListView listView;
 
-    private ArrayList<String> trackList;
+    public ArrayList<String> trackList;
 
     private boolean isPlaying = false;
     private String playPath = new File("src/sample/media/Play.png").getAbsolutePath();
@@ -94,8 +95,8 @@ public class Controller {
 
             public void handle(MouseEvent click) {
 
-                if (click.getButton() == MouseButton.PRIMARY && click.getClickCount() == 2)
-                {
+                if (click.getButton() == MouseButton.PRIMARY && click.getClickCount() == 2) {
+
                     mp.stop();
                     isPlaying = false;
                     playPause.setGraphic(new ImageView(playImg));
@@ -145,14 +146,10 @@ public class Controller {
             public void run() {
                 updatesValues();
             }
+
         }; updateTimer.schedule(tt,40);
     }
 
-    @FXML
-    private void handleProgress (ActionEvent event)
-    {
-       
-    }
     public void addSongs()
     {
         trackList = new ArrayList<>();
@@ -228,7 +225,7 @@ public class Controller {
            try {
                Stage newPlaylist = new Stage();
                Parent root1 = FXMLLoader.load(getClass().getResource("createPlaylist.fxml"));
-               newPlaylist.setTitle("Hello World");
+               newPlaylist.setTitle("New playlist");
                newPlaylist.setScene(new Scene(root1));
                newPlaylist.show();
            } catch (Exception e){
@@ -241,7 +238,7 @@ public class Controller {
         try {
             Stage viewPlaylists = new Stage();
             Parent root2 = FXMLLoader.load(getClass().getResource("viewPlaylist.fxml"));
-            viewPlaylists.setTitle("Hello World");
+            viewPlaylists.setTitle("Playlists");
             viewPlaylists.setScene(new Scene(root2));
             viewPlaylists.show();
         } catch (Exception e){
@@ -253,4 +250,27 @@ public class Controller {
         setListView();
     }
 
-}
+    public void handleSearch(ActionEvent event) throws Exception{
+            try {
+                Stage searchSongs = new Stage();
+                Parent root3 = FXMLLoader.load(getClass().getResource("searchSongs.fxml"));
+                searchSongs.setTitle("Search for songs and artists");
+                searchSongs.setScene(new Scene(root3));
+                searchSongs.show();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+    }
+
+    public void handleAddSong(ActionEvent event) throws Exception{
+                try {
+                    Stage tracklistAdd = new Stage();
+                    Parent root4 = FXMLLoader.load(getClass().getResource("tracklistAdd.fxml"));
+                    tracklistAdd.setTitle("Add song to tracklist");
+                    tracklistAdd.setScene(new Scene(root4));
+                    tracklistAdd.show();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+        }
+    }
