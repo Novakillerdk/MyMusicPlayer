@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -57,7 +58,9 @@ public class Controller {
     @FXML
     private ListView listView;
 
-    private ArrayList<String> trackList;
+    private ArrayList<Songs.songData> trackList = new ArrayList<>();
+    private ArrayList<String> trackList1 = new ArrayList<>();
+    private Songs songList = new Songs();
 
     private boolean isPlaying = false;
     private String playPath = new File("src/sample/media/Play.png").getAbsolutePath();
@@ -83,6 +86,7 @@ public class Controller {
 
         mp.setAutoPlay(false);
 
+        songList.addArray();
         addSongs();
         setListView();
     }
@@ -155,9 +159,13 @@ public class Controller {
     }
     public void addSongs()
     {
-        trackList = new ArrayList<>();
-        trackList.add(Songs.pizzaTime.getSong());
-        trackList.add(Songs.testTrack.getSong());
+        trackList = songList.getTrackList();
+        Iterator itr=trackList.iterator();
+        while(itr.hasNext()) {
+            Songs.songData st = (Songs.songData) itr.next();
+            String songN = st.name;
+            trackList1.add(songN);
+        }
     }
 
     @FXML
@@ -197,7 +205,7 @@ public class Controller {
 
     public void setListView()
     {
-        ObservableList list=FXCollections.observableArrayList(trackList);
+        ObservableList list=FXCollections.observableArrayList(trackList1);
         listView.setItems(list);
     }
 
