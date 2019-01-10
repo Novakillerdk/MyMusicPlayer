@@ -21,11 +21,26 @@ public class SearchSongs {
         Button b = (Button) event.getSource();
         String buttonPressed = b.getText();
 
-        if (buttonPressed.equals("Search")) {
+        if (buttonPressed.equals("Search for song")) {
             String contentName = getContent.getText();
 
-            DB.selectSQL("Select * from project WHERE song = '"+ contentName +"' ");
-            DB.selectSQL("Select * from project WHERE artist = '"+ contentName +"' ");
+            DB.selectSQL("Select * from tblSongs WHERE fldSong = '"+ contentName +"' ");
+
+            do{
+                String data = DB.getDisplayData();
+                if (data.equals(DB.NOMOREDATA)){
+                    break;
+                }else{
+                    System.out.print(data);
+                    listContent.setText(data);
+                }
+            } while(true);
+
+        }
+        if (buttonPressed.equals("Search for artist")){
+            String contentName = getContent.getText();
+            DB.selectSQL("Select * from tblSongs WHERE fldArtist = '"+ contentName +"' ");
+
 
             do{
                 String data = DB.getDisplayData();

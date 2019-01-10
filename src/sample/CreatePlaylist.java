@@ -13,7 +13,7 @@ import javafx.scene.input.MouseEvent;
 
 import java.util.List;
 
-public class CreatePlaylist {
+public class CreatePlaylist  {
 
     @FXML
     private ListView allSongs;
@@ -35,7 +35,10 @@ public class CreatePlaylist {
 
 
 
-    public void handleRefresh(ActionEvent event) {
+
+
+    public void handleRefresh(ActionEvent event)  {
+
 
 
 
@@ -49,17 +52,21 @@ public class CreatePlaylist {
      */
     public void handleAllSongs(ActionEvent event) {
 
+
+
         Button b = (Button) event.getSource();
         String buttonPressed = b.getText();
-        if(buttonPressed.equals("Add")){
+        if (buttonPressed.equals("Add")) {
 
 
-
-        }
-        if(buttonPressed.equals("Remove")){
 
 
         }
+        if (buttonPressed.equals("Remove")) {
+
+
+        }
+
 
 
     }
@@ -81,7 +88,7 @@ public class CreatePlaylist {
         playlistName.clear();
 
         //TODO
-        DB.insertSQL("Insert into project values('"+playlistName+"'");
+        DB.insertSQL("Insert into tblSongs values('"+playlistName+"'");
         do{
             String data = DB.getDisplayData();
             if (data.equals(DB.NOMOREDATA)){

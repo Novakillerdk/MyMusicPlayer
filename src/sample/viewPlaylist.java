@@ -21,13 +21,14 @@ public class viewPlaylist {
 
         Button b = (Button) event.getSource();
         String buttonpresed = b.getText();
+        //String playlistName = viewPlaylist.
         if (buttonpresed.equals("Select playlist")){
 
         }
         if(buttonpresed.equals("Remove playlist")){
 
             //TODO
-            DB.deleteSQL("Delete from project where project_no like 'g%';");
+          //  DB.deleteSQL("Delete from tblSongs where fldPlaylistName like '"+playlistName+"';");
 
         }
 
