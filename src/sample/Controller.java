@@ -22,9 +22,7 @@ import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.Closeable;
 import java.io.File;
-import java.security.cert.Extension;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Timer;
@@ -57,13 +55,13 @@ public class Controller {
     private Label currentTime;
     @FXML
     private Label TTime;
-    @FXML
-    private FileChooser fileSelection;
 
     @FXML
     private ListView listView;
 
-    private ArrayList<String> trackList;
+    private ArrayList<Songs.songData> trackList = new ArrayList<>();
+    private ArrayList<String> trackList1 = new ArrayList<>();
+    private Songs songList = new Songs();
 
     private boolean isPlaying = false;
     private String playPath = new File("src/sample/media/Play.png").getAbsolutePath();
@@ -74,6 +72,7 @@ public class Controller {
     private Image stopImg = new Image(new File(stopPath).toURI().toString());
 
     private String path = new File(Songs.pizzaTime.getLoc()).getAbsolutePath();
+    private String songN;
 
     private Timer updateTimer = new Timer();
 
@@ -95,25 +94,31 @@ public class Controller {
     }
 
     @FXML
-    private void handlePlayListChoose(MouseEvent arg0) {
+    private void handlePlayListChoose(MouseEvent arg0)
+    {
         listView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
             public void handle(MouseEvent click) {
 
-                if (click.getButton() == MouseButton.PRIMARY && click.getClickCount() == 2) {
-
+                if (click.getButton() == MouseButton.PRIMARY && click.getClickCount() == 2)
+                {
                     mp.stop();
                     isPlaying = false;
                     playPause.setGraphic(new ImageView(playImg));
-                    if (listView.getSelectionModel().getSelectedItem().equals("Pizza")) {
-                        path = new File(Songs.pizzaTime.getLoc()).getAbsolutePath();
-                        songName.setText(Songs.pizzaTime.getSong());
+
+                    for (int i = 0; i < trackList.size(); i++) {
+                            if(listView.getSelectionModel().getSelectedItem().equals(trackList.get(i).name))
+                            {
+                            path = new File(trackList.get(i).location).getAbsolutePath();
+                            songN = trackList.get(i).name;
+                            break;
+                        }
                     }
-                    if (listView.getSelectionModel().getSelectedItem().equals("Bongo")) {
-                        path = new File(Songs.testTrack.getLoc()).getAbsolutePath();
-                        songName.setText(Songs.testTrack.getSong());
-                    }
+                    songName.setText(songN);
                     setSong();
+
+                    mp.play();
+                    addTimeListener();
                 }
             }
         });
@@ -137,53 +142,68 @@ public class Controller {
         setSong();
     }
 
-    private void setSong() {
+    private void setSong ()
+    {
         me = new Media(new File(path).toURI().toString());
         mp = new MediaPlayer(me);
         mediaPlayer.setMediaPlayer(mp);
-
         updateTimer = new Timer();
         TimerTask tt = new TimerTask() {
             @Override
             public void run() {
                 updatesValues();
             }
+        }; updateTimer.schedule(tt,30);
+    }
 
     @FXML
     private void handleProgress (ActionEvent event)
     {
-       
+
     }
     public void addSongs()
     {
-        trackList = new ArrayList<>();
-        trackList.add(Songs.pizzaTime.getSong());
-        trackList.add(Songs.testTrack.getSong());
-    }
-
-    @FXML
-    private void handlePlayPause(ActionEvent event) {
-        if (isPlaying) {
-            isPlaying = false;
-            playPause.setGraphic(new ImageView(playImg));
-            mp.pause();
-        } else if (!isPlaying) {
-            isPlaying = true;
-            playPause.setGraphic(new ImageView(pauseImg));
-            mp.play();
-
-            mp.currentTimeProperty().addListener(new InvalidationListener() {
-                @Override
-                public void invalidated(Observable observable) {
-                    updatesValues();
-                }
-            });
+        trackList = songList.getTrackList();
+        Iterator itr=trackList.iterator();
+        while(itr.hasNext()) {
+            Songs.songData st = (Songs.songData) itr.next();
+            String songN = st.name;
+            trackList1.add(songN);
         }
     }
 
     @FXML
-    private void handleStopMedia(ActionEvent event) {
-        if (isPlaying) {
+    private void handlePlayPause (ActionEvent event)
+    {
+        if(isPlaying)
+        {
+            isPlaying = false;
+            playPause.setGraphic(new ImageView(playImg));
+            mp.pause();
+        }
+        else if (!isPlaying)
+        {
+            isPlaying = true;
+            playPause.setGraphic(new ImageView(pauseImg));
+            mp.play();
+
+            addTimeListener();
+        }
+    }
+    private void addTimeListener()
+    {
+        mp.currentTimeProperty().addListener(new InvalidationListener() {
+            @Override
+            public void invalidated(Observable observable) {
+                updatesValues();
+            }
+        });
+    }
+    @FXML
+    private void handleStopMedia (ActionEvent event)
+    {
+        if(isPlaying)
+        {
             isPlaying = false;
             playPause.setGraphic(new ImageView(playImg));
         }
@@ -192,20 +212,22 @@ public class Controller {
 
     public void setListView()
     {
-        ObservableList list=FXCollections.observableArrayList(trackList);
+        ObservableList list=FXCollections.observableArrayList(trackList1);
         listView.setItems(list);
     }
 
-    private String formatTimer(long formatTime) {
-        return String.format("%02d : %02d",
+    private String formatTimer(long formatTime)
+    {
+        return  String.format("%02d : %02d",
                 TimeUnit.MILLISECONDS.toMinutes(formatTime),
                 TimeUnit.MILLISECONDS.toSeconds(formatTime) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(formatTime)));
     }
-
-    private void updatesValues() {
+    private void updatesValues()
+    {
         Platform.runLater(new Runnable() {
-            public void run() {
+            public void run()
+            {
                 long secFormat = (long) mp.getCurrentTime().toMillis();
                 currentTime.setText(formatTimer(secFormat));
 
@@ -217,27 +239,27 @@ public class Controller {
         });
     }
 
-    public void handleNewPlaylist(ActionEvent event) throws Exception {
+    public void handleNewPlaylist(ActionEvent event) throws Exception{
         try {
             Stage newPlaylist = new Stage();
             Parent root1 = FXMLLoader.load(getClass().getResource("createPlaylist.fxml"));
-            newPlaylist.setTitle("New playlist");
+            newPlaylist.setTitle("Hello World");
             newPlaylist.setScene(new Scene(root1));
             newPlaylist.show();
-        } catch (Exception e) {
+        } catch (Exception e){
             e.printStackTrace();
         }
 
     }
 
-    public void handlePlaylist(ActionEvent event) throws Exception {
+    public void handlePlaylist(ActionEvent event) throws Exception{
         try {
             Stage viewPlaylists = new Stage();
             Parent root2 = FXMLLoader.load(getClass().getResource("viewPlaylist.fxml"));
-            viewPlaylists.setTitle("Playlists");
+            viewPlaylists.setTitle("Hello World");
             viewPlaylists.setScene(new Scene(root2));
             viewPlaylists.show();
-        } catch (Exception e) {
+        } catch (Exception e){
             e.printStackTrace();
         }
     }
@@ -245,7 +267,6 @@ public class Controller {
     public void handleAllSongs(ActionEvent actionEvent) {
         setListView();
     }
-
     public void handleSearch(ActionEvent event) throws Exception {
         try {
             Stage searchSongs = new Stage();
@@ -260,9 +281,9 @@ public class Controller {
 
     public void handleAddSong(ActionEvent event) throws Exception {
 
-        try{
+        try {
             Stage addsongsTo = new Stage();
-            Parent root4 =  FXMLLoader.load(getClass().getResource("tracklist.fxml"));
+            Parent root4 = FXMLLoader.load(getClass().getResource("tracklist.fxml"));
             addsongsTo.setTitle("Add songs to tracklist");
             addsongsTo.setScene(new Scene(root4));
             addsongsTo.show();
@@ -271,24 +292,19 @@ public class Controller {
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Add song to tracklist");
             chooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter("MP3 files", "*.mp3"),
-            new FileChooser.ExtensionFilter("WAV files", "*.wav"));
+                    new FileChooser.ExtensionFilter("MP3 files", "*.mp3"),
+                    new FileChooser.ExtensionFilter("WAV files", "*.wav"));
             File defaultDirectory = new File("src/sample/media");
             chooser.setInitialDirectory(defaultDirectory);
             File openFileBrowser = chooser.showOpenDialog(addsongsTo);
             File mediaDir = new File(System.getProperty("user.home"), "src/sample/mediaDir");
-            if (!mediaDir.exists()){
+            if (!mediaDir.exists()) {
                 mediaDir.mkdir();
             }
             //String filePath = new File("src/sample/media").getAbsolutePath();
             addsongsTo.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-
-
-
     }
 }
