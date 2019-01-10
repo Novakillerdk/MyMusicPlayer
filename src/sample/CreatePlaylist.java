@@ -13,7 +13,7 @@ import javafx.scene.input.MouseEvent;
 
 import java.util.List;
 
-public class CreatePlaylist  {
+public class CreatePlaylist {
 
     @FXML
     private ListView allSongs;
@@ -32,15 +32,11 @@ public class CreatePlaylist  {
     @FXML
     private TextField playlistName;
 
-
-
-
+    private Songs songList = new Songs();
 
 
     public void handleRefresh(ActionEvent event)  {
-
-
-
+        allSongs.getItems().addAll(songList.trackList);
 
     }
 
@@ -52,40 +48,49 @@ public class CreatePlaylist  {
      */
     public void handleAllSongs(ActionEvent event) {
 
-
-
         Button b = (Button) event.getSource();
         String buttonPressed = b.getText();
         if (buttonPressed.equals("Add")) {
 
+            ObservableList<String> songSelection;
+            songSelection = allSongs.getSelectionModel().getSelectedItems();
 
-
-
+            for (String sendSongTo: songSelection) {
+                selectedSongs.getItems().addAll(sendSongTo);
+            }
         }
         if (buttonPressed.equals("Remove")) {
 
+            ObservableList<String> removeSong;
+            removeSong = selectedSongs.getSelectionModel().getSelectedItems();
+
+            for (String removed: removeSong) {
+                selectedSongs.getItems().removeAll(removeSong);
+            }
 
         }
-
-
-
     }
 
     public void ClearPlaylist(ActionEvent event) {
         Button b = (Button) event.getSource();
         String buttonPressed = b.getText();
         if(buttonPressed.equals("Clear playlist")){
+            /*
+            ObservableList<String> removeAll;
+            removeAll = selectedSongs.getItems().remove(0, );
+
+            for (String removed: removeAll) {
+                selectedSongs.getItems().removeAll(removeAll);
+            }*/
 
         }
-
-
     }
 
     public void sendPlaylist(ActionEvent event) {
 
         String nameOfPlaylist = playlistName.getText();
         System.out.println(nameOfPlaylist);
-        playlistName.clear();
+
 
         //TODO
         DB.insertSQL("Insert into tblSongs values('"+playlistName+"'");
@@ -98,6 +103,8 @@ public class CreatePlaylist  {
             }
         } while(true);
 
+        playlistName.clear();
+
     }
 
     public void handleMouseAll(MouseEvent mouseEvent) {
@@ -106,6 +113,14 @@ public class CreatePlaylist  {
             public void handle(MouseEvent click) {
 
                 if (click.getButton() == MouseButton.PRIMARY && click.getClickCount() == 2) {
+
+
+                    ObservableList<String> songSelection;
+                    songSelection = allSongs.getSelectionModel().getSelectedItems();
+
+                    for (String sendSongTo: songSelection) {
+                        songSelection.addAll(sendSongTo);
+                    }
 
 
                 }
