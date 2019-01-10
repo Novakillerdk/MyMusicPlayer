@@ -23,6 +23,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Timer;
@@ -48,7 +49,7 @@ public class Controller {
     @FXML
     private Button track2;
     @FXML
-    private Slider proBar;
+    private Slider timeSlider;
     @FXML
     private Label songName;
     @FXML
@@ -91,8 +92,17 @@ public class Controller {
         songList.addArray();
         addSongs();
         setListView();
+        setTimeSlider();
     }
-
+    private void setTimeSlider()
+    {
+        mp.currentTimeProperty().addListener(new InvalidationListener() {
+            public void invalidated(Observable ov)
+            {
+                updatesSlider();
+            }
+        });
+    }
     @FXML
     private void handlePlayListChoose(MouseEvent arg0)
     {
@@ -119,6 +129,7 @@ public class Controller {
 
                     mp.play();
                     addTimeListener();
+                    setTimeSlider();
                 }
             }
         });
@@ -154,6 +165,7 @@ public class Controller {
                 updatesValues();
             }
         }; updateTimer.schedule(tt,30);
+        setTimeSlider();
     }
 
     @FXML
@@ -188,6 +200,7 @@ public class Controller {
             mp.play();
 
             addTimeListener();
+            setTimeSlider();
         }
     }
     private void addTimeListener()
@@ -196,6 +209,15 @@ public class Controller {
             @Override
             public void invalidated(Observable observable) {
                 updatesValues();
+            }
+        });
+        timeSlider.valueProperty().addListener(new InvalidationListener() {
+            public void invalidated(Observable ov)
+            {
+                if (timeSlider.isPressed()) {
+
+                    mp.seek(mp.getMedia().getDuration().multiply(timeSlider.getValue() / 100));
+                }
             }
         });
     }
@@ -237,6 +259,7 @@ public class Controller {
                 updateTimer.cancel();
             }
         });
+
     }
 
     public void handleNewPlaylist(ActionEvent event) throws Exception{
@@ -252,6 +275,15 @@ public class Controller {
 
     }
 
+    protected void updatesSlider()
+    {
+        Platform.runLater(new Runnable() {
+            public void run()
+            {
+                timeSlider.setValue(mp.getCurrentTime().toMillis() / mp.getTotalDuration().toMillis() * 100);
+            }
+        });
+    }
     public void handlePlaylist(ActionEvent event) throws Exception{
         try {
             Stage viewPlaylists = new Stage();
