@@ -3,6 +3,7 @@ package sample;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -60,9 +62,15 @@ public class Controller {
     @FXML
     private ListView listView;
 
+    @FXML
+    private TableView trackTable;
+    @FXML
+    private TableColumn<Songs.songData, String> trackTableSong = new TableColumn<>("Songs");
+    @FXML
+    private TableColumn<Songs.songData, String> trackTableArtist = new TableColumn<>("Artist");
+
     private ArrayList<Songs.songData> trackList = new ArrayList<>();
-    private ArrayList<String> trackList1 = new ArrayList<>();
-    private Songs songList = new Songs();
+    private Tracklist setTrackList = new Tracklist();
 
     private boolean isPlaying = false;
     private String playPath = new File("src/sample/media/Play.png").getAbsolutePath();
@@ -72,7 +80,7 @@ public class Controller {
     private Image pauseImg = new Image(new File(pausePath).toURI().toString());
     private Image stopImg = new Image(new File(stopPath).toURI().toString());
 
-    private String path = new File(Songs.pizzaTime.getLoc()).getAbsolutePath();
+    private String path;
     private String songN;
 
     private Timer updateTimer = new Timer();
@@ -84,14 +92,17 @@ public class Controller {
         stopButton.setContentDisplay(ContentDisplay.CENTER);
         stopButton.setGraphic(new ImageView(stopImg));
 
-        path = new File(Songs.pizzaTime.getLoc()).getAbsolutePath();
+
+
+        setTrackList.setListView();
+        setLists();
+
+        path = new File(trackList.get(0).location).getAbsolutePath();
         setSong();
 
         mp.setAutoPlay(false);
 
-        songList.addArray();
-        addSongs();
-        setListView();
+
         setTimeSlider();
     }
     private void setTimeSlider()
@@ -106,7 +117,7 @@ public class Controller {
     @FXML
     private void handlePlayListChoose(MouseEvent arg0)
     {
-        listView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        trackTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
             public void handle(MouseEvent click) {
 
@@ -117,7 +128,7 @@ public class Controller {
                     playPause.setGraphic(new ImageView(playImg));
 
                     for (int i = 0; i < trackList.size(); i++) {
-                            if(listView.getSelectionModel().getSelectedItem().equals(trackList.get(i).name))
+                            if(trackTable.getSelectionModel().getSelectedItem().equals(trackList.get(i).name))
                             {
                             path = new File(trackList.get(i).location).getAbsolutePath();
                             songN = trackList.get(i).name;
@@ -135,24 +146,6 @@ public class Controller {
         });
     }
 
-    @FXML
-    private void handleSongs(ActionEvent event) {
-        Button b = (Button) event.getSource();
-        String buttonPressed = b.getText();
-        mp.stop();
-        isPlaying = false;
-        playPause.setGraphic(new ImageView(playImg));
-        if (buttonPressed.equals("Play track 1")) {
-            path = new File(Songs.pizzaTime.getLoc()).getAbsolutePath();
-            songName.setText(Songs.pizzaTime.getSong());
-        }
-        if (buttonPressed.equals("play track 2")) {
-            path = new File(Songs.testTrack.getLoc()).getAbsolutePath();
-            songName.setText(Songs.testTrack.getSong());
-        }
-        setSong();
-    }
-
     private void setSong ()
     {
         me = new Media(new File(path).toURI().toString());
@@ -166,22 +159,6 @@ public class Controller {
             }
         }; updateTimer.schedule(tt,30);
         setTimeSlider();
-    }
-
-    @FXML
-    private void handleProgress (ActionEvent event)
-    {
-
-    }
-    public void addSongs()
-    {
-        trackList = songList.getTrackList();
-        Iterator itr=trackList.iterator();
-        while(itr.hasNext()) {
-            Songs.songData st = (Songs.songData) itr.next();
-            String songN = st.name;
-            trackList1.add(songN);
-        }
     }
 
     @FXML
@@ -232,10 +209,14 @@ public class Controller {
         mp.stop();
     }
 
-    public void setListView()
+    public void setLists()
     {
-        ObservableList list=FXCollections.observableArrayList(trackList1);
-        listView.setItems(list);
+        trackList = setTrackList.getTrackList();
+        ObservableList list= FXCollections.observableArrayList(setTrackList.getList());
+        System.out.println(setTrackList.getList());
+
+        trackTableSong.setCellValueFactory(new PropertyValueFactory<>("name"));
+        trackTable.getItems().addAll(list);
     }
 
     private String formatTimer(long formatTime)
@@ -297,7 +278,7 @@ public class Controller {
     }
 
     public void handleAllSongs(ActionEvent actionEvent) {
-        setListView();
+        setLists();
     }
     public void handleSearch(ActionEvent event) throws Exception {
         try {

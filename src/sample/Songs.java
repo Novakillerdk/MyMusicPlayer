@@ -8,28 +8,14 @@ import java.util.ArrayList;
 
 public class Songs {
 
-    private String loc;
-    private String song;
     public ArrayList<songData> trackList = new ArrayList<>();
-    private songData songD = new songData("","",0);
-
-    public Songs()
-    {
-    }
-    public Songs(String location,String songName){
-        loc = location;
-        song = songName;
-    }
-
-
-    public static Songs pizzaTime = new Songs("src/sample/media/pizza_time.mp3","Pizza");
-    public static Songs testTrack = new Songs("src/sample/media/TestTrack.mp3","Bongo");
+    private songData songD = new songData("","","");
 
     public void addArray()
     {
-        DB.selectSQL("Select fldPath,fldSong from tblSongs");
+        DB.selectSQL("Select fldPath,fldSong,fldArtist from tblSongs");
         do {
-            songD = new songData("","",0);
+            songD = new songData("","","");
             String data = DB.getData();
             if (data.equals(DB.NOMOREDATA)) {
                 break;
@@ -44,20 +30,21 @@ public class Songs {
                 else
                 {
                     songD.name = data;
+                    data = DB.getData();
+                    if (data.equals(DB.NOMOREDATA)) {
+                        break;
+                    }
+                    else
+                    {
+                        songD.artist = data;
 
+                    }
+                    trackList.add(songD);
                 }
-                trackList.add(songD);
+
             }
         } while (true);
 
-    }
-
-    public String getSong() {
-        return song;
-    }
-
-    public String getLoc() {
-        return loc;
     }
 
     public ArrayList<songData> getTrackList() {
@@ -66,13 +53,16 @@ public class Songs {
 
     class songData
     {
-        String location = loc, name;
-        int index;
-        songData(String loc,String name,int index)
+        String location, name, artist;
+        songData(String loc,String name,String artist)
         {
             this.location = loc;
             this.name = name;
-            this.index = index;
+            this.artist = artist;
+        }
+
+        public String getName() {
+            return name;
         }
     }
 }
