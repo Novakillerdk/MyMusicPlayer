@@ -51,7 +51,7 @@ public class Songs {
         return trackList;
     }
 
-    class songData
+    public static class songData
     {
         String location, name, artist;
         songData(String loc,String name,String artist)
@@ -63,6 +63,14 @@ public class Songs {
 
         public String getName() {
             return name;
+        }
+
+        public String getLocation() {
+            return location;
+        }
+
+        public String getArtist() {
+            return artist;
         }
     }
 }

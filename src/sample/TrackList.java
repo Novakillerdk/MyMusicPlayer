@@ -20,10 +20,10 @@ public class TrackList {
     public void setListView()
     {
         addSong();
-        list=FXCollections.observableArrayList(trackList);
+        listNames=FXCollections.observableArrayList(trackName);
     }
 
     public ObservableList getList() {
-        return list;
+        return listNames;
     }
 }

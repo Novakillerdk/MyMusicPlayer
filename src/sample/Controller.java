@@ -3,7 +3,6 @@ package sample;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,9 +24,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -47,10 +44,6 @@ public class Controller {
     private Media me;
 
     @FXML
-    private Button track1;
-    @FXML
-    private Button track2;
-    @FXML
     private Slider timeSlider;
     @FXML
     private Label songName;
@@ -60,12 +53,9 @@ public class Controller {
     private Label TTime;
 
     @FXML
-    private ListView listView;
-
-    @FXML
     private TableView trackTable;
     @FXML
-    private TableColumn<Songs.songData, String> trackTableSong = new TableColumn<>("Songs");
+    private TableColumn trackTableSong;
     @FXML
     private TableColumn<Songs.songData, String> trackTableArtist = new TableColumn<>("Artist");
 
@@ -97,6 +87,8 @@ public class Controller {
         setTrackList.setListView();
         setLists();
 
+        trackList = setTrackList.getTrackList();
+
         path = new File(trackList.get(0).location).getAbsolutePath();
         setSong();
 
@@ -124,11 +116,11 @@ public class Controller {
                 if (click.getButton() == MouseButton.PRIMARY && click.getClickCount() == 2)
                 {
                     mp.stop();
-                    isPlaying = false;
-                    playPause.setGraphic(new ImageView(playImg));
+                    isPlaying = true;
+                    playPause.setGraphic(new ImageView(pauseImg));
 
                     for (int i = 0; i < trackList.size(); i++) {
-                            if(trackTable.getSelectionModel().getSelectedItem().equals(trackList.get(i).name))
+                            if(trackTable.getSelectionModel().getSelectedItem().equals(trackList.get(i)))
                             {
                             path = new File(trackList.get(i).location).getAbsolutePath();
                             songN = trackList.get(i).name;
@@ -211,12 +203,11 @@ public class Controller {
 
     public void setLists()
     {
-        trackList = setTrackList.getTrackList();
-        ObservableList list= FXCollections.observableArrayList(setTrackList.getList());
-        System.out.println(setTrackList.getList());
 
+        ObservableList<Songs.songData> list = FXCollections.observableArrayList(setTrackList.getTrackList());
         trackTableSong.setCellValueFactory(new PropertyValueFactory<>("name"));
-        trackTable.getItems().addAll(list);
+        trackTableArtist.setCellValueFactory(new PropertyValueFactory<>("artist"));
+        trackTable.setItems(list);
     }
 
     private String formatTimer(long formatTime)

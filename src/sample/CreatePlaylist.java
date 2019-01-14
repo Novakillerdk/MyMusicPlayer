@@ -98,6 +98,16 @@ public class CreatePlaylist {
         System.out.println(nameOfPlaylist);
 
 
+        ArrayList<String> testList = new ArrayList<>(selectedSongs.getItems());
+        ObservableList testObs = FXCollections.observableArrayList(selectedSongs.getSelectionModel().getSelectedItems());
+        String testString = (String) testObs.get(0);
+        System.out.println(testString);
+
+        for (String name : testList) {
+            System.out.println(name);
+
+        }
+        /*
         //TODO
         DB.insertSQL("Insert into tblSongs values('"+playlistName+"'");
         do{
@@ -107,7 +117,7 @@ public class CreatePlaylist {
             }else{
                 System.out.print(data);
             }
-        } while(true);
+        } while(true);*/
 
         playlistName.clear();
 
