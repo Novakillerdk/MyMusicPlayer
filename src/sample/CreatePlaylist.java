@@ -12,8 +12,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class CreatePlaylist {
 
@@ -35,7 +33,7 @@ public class CreatePlaylist {
     private TextField playlistName;
 
     private Songs songList = new Songs();
-    private Tracklist setTrackList = new Tracklist();
+    private TrackList setTrackList = new TrackList();
 
     public void initialize()
     {

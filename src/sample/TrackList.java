@@ -4,18 +4,28 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 
 public class TrackList {
     private Songs songList = new Songs();
 
-    public ArrayList<Songs.songData> trackList;
-    public ObservableList list= FXCollections.observableArrayList();
+    private ArrayList<Songs.songData> trackList = new ArrayList<>();
+    private ArrayList<String> trackName = new ArrayList<>();
+    private ObservableList listNames= FXCollections.observableArrayList();
 
-    public void addSong()
+    private void addSong()
     {
-        trackList = new ArrayList<>(songList.getTrackList());
-        trackList.add(trackList.get(0));
+        songList.addArray();
+
+        trackName.clear();
+        trackList = songList.getTrackList();
+        Iterator itr=trackList.iterator();
+        while(itr.hasNext()) {
+            Songs.songData st = (Songs.songData) itr.next();
+            String songN = st.getName();
+            trackName.add(songN);
+        }
     }
     public void setListView()
     {
@@ -23,7 +33,35 @@ public class TrackList {
         listNames=FXCollections.observableArrayList(trackName);
     }
 
+    public ArrayList<Songs.songData> getTrackList() {
+        return trackList;
+    }
+
     public ObservableList getList() {
         return listNames;
     }
+
 }
+/*
+    private ArrayList<Songs.songData> trackList = new ArrayList<>();
+    private ArrayList<String> trackList1 = new ArrayList<>();
+
+    public void initialize()
+    {
+        songList.addArray();
+    }
+    public void handleRefresh(ActionEvent event)  {
+
+        trackList1.clear();
+        trackList = songList.getTrackList();
+        Iterator itr=trackList.iterator();
+        while(itr.hasNext()) {
+            Songs.songData st = (Songs.songData) itr.next();
+            String songN = st.name;
+            trackList1.add(songN);
+        }
+            ObservableList list=FXCollections.observableArrayList(trackList1);
+            allSongs.setItems(list);
+
+    }
+    */

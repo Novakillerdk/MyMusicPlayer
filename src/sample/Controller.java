@@ -60,7 +60,7 @@ public class Controller {
     private TableColumn<Songs.songData, String> trackTableArtist = new TableColumn<>("Artist");
 
     private ArrayList<Songs.songData> trackList = new ArrayList<>();
-    private Tracklist setTrackList = new Tracklist();
+    private TrackList setTrackList = new TrackList();
 
     private boolean isPlaying = false;
     private String playPath = new File("src/sample/media/Play.png").getAbsolutePath();
