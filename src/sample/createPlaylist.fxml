@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -7,7 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.CreatePlaylist">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.CreatePlaylist">
    <children>
       <Button fx:id="removeSong" layoutX="271.0" layoutY="140.0" mnemonicParsing="false" onAction="#handleAllSongs" text="Remove" />
       <Button fx:id="AddsongTo" layoutX="281.0" layoutY="97.0" mnemonicParsing="false" onAction="#handleAllSongs" text="Add" />
@@ -23,6 +27,7 @@
       <Label layoutX="434.0" layoutY="24.0" text="Selected songs" />
       <TextField fx:id="playlistName" layoutX="399.0" layoutY="298.0" onAction="#sendPlaylist" promptText="Playlist name" />
       <Button fx:id="addPlaylist" layoutX="448.0" layoutY="340.0" mnemonicParsing="false" onAction="#sendPlaylist" text="O.K" />
-      <Button fx:id="refreshSongs" layoutX="99.0" layoutY="264.0" mnemonicParsing="false" onAction="#handleRefresh" text="Refresh" />
+      <Label layoutX="258.0" layoutY="259.0" text="Selected playlist" />
+      <ChoiceBox fx:id="choicePlaylist" layoutX="226.0" layoutY="286.0" prefWidth="150.0" />
    </children>
 </AnchorPane>

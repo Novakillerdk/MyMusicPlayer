@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class Songs {
 
     public ArrayList<songData> trackList = new ArrayList<>();
+    public ArrayList<String> playListSong = new ArrayList<>();
     private songData songD = new songData("","","");
 
     public void addArray()
@@ -46,7 +47,23 @@ public class Songs {
         } while (true);
 
     }
-
+    public void setPlayListSongs(String playList)
+    {
+        playListSong.clear();
+        DB.selectSQL("Select fldSong from tblPlaylistSong where fldPlaylistName = '"+playList+"'");
+        do {
+            String data = DB.getData();
+            if (data.equals(DB.NOMOREDATA)) {
+                break;
+            } else {
+                playListSong.add(data);
+            }
+        }while(true);
+    }
+    public ArrayList<String> getPlayListSongs()
+    {
+        return playListSong;
+    }
     public ArrayList<songData> getTrackList() {
         return trackList;
     }

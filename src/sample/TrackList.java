@@ -12,9 +12,11 @@ public class TrackList {
 
     private ArrayList<Songs.songData> trackList = new ArrayList<>();
     private ArrayList<String> trackName = new ArrayList<>();
+    private ArrayList<String> trackArtist = new ArrayList<>();
+    private ArrayList<String> playLists = new ArrayList<>();
     private ObservableList listNames= FXCollections.observableArrayList();
 
-    private void addSong()
+    private void addSongName()
     {
         songList.addArray();
 
@@ -27,9 +29,44 @@ public class TrackList {
             trackName.add(songN);
         }
     }
+    private void addSongArtist()
+    {
+        songList.addArray();
+
+        trackArtist.clear();
+        trackList = songList.getTrackList();
+        Iterator itr=trackList.iterator();
+        while(itr.hasNext()) {
+            Songs.songData st = (Songs.songData) itr.next();
+            String songArt = st.getArtist();
+            trackArtist.add(songArt);
+        }
+    }
+    public void setPlayLists(boolean withCreateNew)
+    {
+        playLists.clear();
+        if (withCreateNew)
+        {
+            playLists.add("Create new...");
+        }
+        DB.selectSQL("Select Trim(fldPlaylist) from tblPlaylist");
+        do {
+            String data = DB.getData();
+            if (data.equals(DB.NOMOREDATA)) {
+                break;
+            } else {
+                playLists.add(data);
+            }
+        } while (true);
+    }
+
+    public ArrayList<String> getPlayLists() {
+        return playLists;
+    }
+
     public void setListView()
     {
-        addSong();
+        addSongName();
         listNames=FXCollections.observableArrayList(trackName);
     }
 
