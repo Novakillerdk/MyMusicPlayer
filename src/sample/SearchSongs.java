@@ -24,7 +24,7 @@ public class SearchSongs {
         if (buttonPressed.equals("Search for song")) {
             String contentName = getContent.getText();
 
-            DB.selectSQL("Select fldSongs from tblSongs WHERE fldSong like '%"+ contentName +"%' ");
+            DB.selectSQL("Select fldSong from tblSongs WHERE fldSong like '%"+ contentName +"%' ");
 
             do{
                 String data = DB.getDisplayData();

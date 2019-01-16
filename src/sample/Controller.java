@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -33,16 +34,20 @@ public class Controller {
 
     @FXML
     private Button playPause;
-
     @FXML
     private Button stopButton;
+    @FXML
+    private Button searchArtist;
+    @FXML
+    private Button searchSong;
 
     @FXML
     private MediaView mediaPlayer;
-
     private MediaPlayer mp;
     private Media me;
 
+    @FXML
+    private TextField getContent;
     @FXML
     private Slider timeSlider;
     @FXML
@@ -120,9 +125,9 @@ public class Controller {
                     playPause.setGraphic(new ImageView(pauseImg));
 
                     for (int i = 0; i < trackList.size(); i++) {
-                            if(trackTable.getSelectionModel().getSelectedItem().equals(trackList.get(i)))
+                        if(trackTable.getSelectionModel().getSelectedItem().equals(trackList.get(i)))
                             {
-                            path = new File(trackList.get(i).location).getAbsolutePath();
+                             path = new File(trackList.get(i).location).getAbsolutePath();
                             songN = trackList.get(i).name;
                             break;
                         }
@@ -172,8 +177,7 @@ public class Controller {
             setTimeSlider();
         }
     }
-    private void addTimeListener()
-    {
+    private void addTimeListener() {
         mp.currentTimeProperty().addListener(new InvalidationListener() {
             @Override
             public void invalidated(Observable observable) {
@@ -181,8 +185,7 @@ public class Controller {
             }
         });
         timeSlider.valueProperty().addListener(new InvalidationListener() {
-            public void invalidated(Observable ov)
-            {
+            public void invalidated(Observable ov) {
                 if (timeSlider.isPressed()) {
 
                     mp.seek(mp.getMedia().getDuration().multiply(timeSlider.getValue() / 100));
@@ -271,16 +274,64 @@ public class Controller {
     public void handleAllSongs(ActionEvent actionEvent) {
         setLists();
     }
-    public void handleSearch(ActionEvent event) throws Exception {
-        try {
-            Stage searchSongs = new Stage();
-            Parent root3 = FXMLLoader.load(getClass().getResource("searchSongs.fxml"));
-            searchSongs.setTitle("Search for songs and artists");
-            searchSongs.setScene(new Scene(root3));
-            searchSongs.show();
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void handleSearch(ActionEvent event) {
+
+
+       ArrayList<String> searchArray = new ArrayList<>();
+
+
+        Button b = (Button) event.getSource();
+        String buttonPressed = b.getText();
+
+        if (buttonPressed.equals("Search for song")) {
+            String contentName = getContent.getText();
+
+            DB.selectSQL("Select fldSong from tblSongs WHERE fldSong like '%"+ contentName +"%' ");
+
+
+
+            do{
+                String data = DB.getData();
+                if (data.equals(DB.NOMOREDATA)){
+                    break;
+                }else{
+                    System.out.print(data);
+                   // ObservableList<String> list = FXCollections.observableArrayList(data);
+
+                   // trackTable.setItems(list);
+                }
+                ObservableList<String> list = FXCollections.observableArrayList(data);
+                searchArray.addAll(list);
+                trackTable.setItems(list);
+            } while(true);
+
         }
+
+        if (buttonPressed.equals("Search for artist")){
+            String contentName = getContent.getText();
+            DB.selectSQL("Select fldArtist from tblSongs WHERE fldArtist like '%"+ contentName +"%' ");
+
+
+            do{
+                String data = DB.getData();
+                if (data.equals(DB.NOMOREDATA)){
+                    break;
+                }else{
+                    System.out.print(data);
+                    ObservableList<String> list = FXCollections.observableArrayList(data);
+                    for (String searchVal: list) {
+                        searchArray.add(searchVal);
+                    }
+                    System.out.println(searchArray);
+                    System.out.println(list);
+                }
+
+
+
+            } while(true);
+
+        }
+
     }
 
     public void handleAddSong(ActionEvent event) throws Exception {

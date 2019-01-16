@@ -189,8 +189,6 @@ public class CreatePlaylist {
                     for (String sendSongTo: songSelection) {
                         songSelection.addAll(sendSongTo);
                     }
-
-
                 }
 
             }

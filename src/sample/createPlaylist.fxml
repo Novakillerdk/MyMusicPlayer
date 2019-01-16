@@ -16,8 +16,8 @@
       <Button fx:id="removeSong" layoutX="271.0" layoutY="140.0" mnemonicParsing="false" onAction="#handleAllSongs" text="Remove" />
       <Button fx:id="AddsongTo" layoutX="281.0" layoutY="97.0" mnemonicParsing="false" onAction="#handleAllSongs" text="Add" />
       <Button fx:id="clearNew" layoutX="279.0" layoutY="181.0" mnemonicParsing="false" onAction="#ClearPlaylist" text="Clear" />
-      <ListView fx:id="allSongs" layoutX="14.0" layoutY="52.0" onMouseClicked="#handleMouseAll" prefHeight="200.0" prefWidth="225.0" />
-      <ListView fx:id="selectedSongs" layoutX="361.0" layoutY="52.0" onMouseClicked="#handleMouseAll" prefHeight="200.0" prefWidth="225.0" />
+      <ListView fx:id="allSongs" layoutX="14.0" layoutY="52.0" prefHeight="200.0" prefWidth="225.0" />
+      <ListView fx:id="selectedSongs" layoutX="361.0" layoutY="52.0" prefHeight="200.0" prefWidth="225.0" />
       <Label layoutX="292.0" layoutY="62.0" text="&gt;">
          <font>
             <Font size="24.0" />
