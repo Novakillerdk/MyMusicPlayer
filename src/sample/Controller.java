@@ -22,6 +22,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -62,10 +63,11 @@ public class Controller {
     @FXML
     private TableColumn trackTableSong;
     @FXML
-    private TableColumn<Songs.songData, String> trackTableArtist = new TableColumn<>("Artist");
+    private TableColumn trackTableArtist;
 
     private ArrayList<Songs.songData> trackList = new ArrayList<>();
     private TrackList setTrackList = new TrackList();
+    private Songs trySong = new Songs();
 
     private boolean isPlaying = false;
     private String playPath = new File("src/sample/media/Play.png").getAbsolutePath();
@@ -87,10 +89,8 @@ public class Controller {
         stopButton.setContentDisplay(ContentDisplay.CENTER);
         stopButton.setGraphic(new ImageView(stopImg));
 
-
-
         setTrackList.setListView();
-        setLists();
+        setLists(setTrackList.getTrackList());
 
         trackList = setTrackList.getTrackList();
 
@@ -204,10 +204,11 @@ public class Controller {
         mp.stop();
     }
 
-    public void setLists()
+    public void setLists(ArrayList<Songs.songData> playList)
     {
 
-        ObservableList<Songs.songData> list = FXCollections.observableArrayList(setTrackList.getTrackList());
+        ObservableList<Songs.songData> list = FXCollections.observableArrayList(playList);
+        System.out.println(list);
         trackTableSong.setCellValueFactory(new PropertyValueFactory<>("name"));
         trackTableArtist.setCellValueFactory(new PropertyValueFactory<>("artist"));
         trackTable.setItems(list);
@@ -266,13 +267,18 @@ public class Controller {
             viewPlaylists.setTitle("Hello World");
             viewPlaylists.setScene(new Scene(root2));
             viewPlaylists.show();
+            viewPlaylists.setOnHiding((WindowEvent t)-> {
+                setTrackList.setPlaylist(setTrackList.getSelectedTracklist());
+                setLists(setTrackList.getTrackList());
+            });
         } catch (Exception e){
             e.printStackTrace();
         }
-    }
 
+    }
     public void handleAllSongs(ActionEvent actionEvent) {
-        setLists();
+        setTrackList.setListView();
+        setLists(setTrackList.getTrackList());
     }
     public void handleSearch(ActionEvent event) {
 

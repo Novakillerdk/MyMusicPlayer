@@ -1,6 +1,5 @@
 package sample;
 
-import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -76,8 +75,8 @@ public class CreatePlaylist {
     {
         ObservableList<String> emptyList = FXCollections.observableArrayList("");
         choicePlaylist.getItems().setAll(emptyList);
-        setTrackList.setPlayLists(true);
-        choicePlaylist.getItems().setAll(setTrackList.getPlayLists());
+        setTrackList.setArrayPlaylist(true);
+        choicePlaylist.getItems().setAll(setTrackList.getArrayPlaylist());
         choicePlaylist.setValue("Create new...");
     }
     /***

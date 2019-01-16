@@ -4,8 +4,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.input.InputEvent;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -20,6 +23,7 @@ public class viewPlaylist {
     private Songs songList = new Songs();
     private Controller getControllerMethods = new Controller();
     private ArrayList<String> playlistArray = new ArrayList<>();
+    private TrackList trackList = new TrackList();
 
     public void initialize(){
         setPlaylistViewer();
@@ -42,34 +46,35 @@ public class viewPlaylist {
         playlistViewer.setItems(DBData);
     }
 
-    public void handleDB(ActionEvent event) {
-
-        Button b = (Button) event.getSource();
-        String buttonpresed = b.getText();
-
-        if(buttonpresed.equals("Remove playlist")){
-            String playlistName = "";
-            ObservableList<String> playlist = playlistViewer.getSelectionModel().getSelectedItems();
-            for (String getFromArray:playlist) {
-                playlistName = getFromArray;
-            }
-            DB.deleteSQL("DELETE FROM tblPlaylist where fldPlaylist = '"+ playlistName+"'");
-            DB.deleteSQL("DELETE from tblPlaylistSong where fldPlaylistName = '"+playlistName+"'");
-            setPlaylistViewer();
+    public void handleRemove(ActionEvent event) {
+        String playlistName = "";
+        ObservableList<String> playlist = playlistViewer.getSelectionModel().getSelectedItems();
+        for (String getFromArray:playlist) {
+            playlistName = getFromArray;
         }
+        DB.deleteSQL("DELETE FROM tblPlaylist where fldPlaylist = '"+ playlistName+"'");
+        DB.deleteSQL("DELETE from tblPlaylistSong where fldPlaylistName = '"+playlistName+"'");
+        setPlaylistViewer();
+
     }
 
-    public void handleSendToMain(ActionEvent event) {
+    public void handleSelectPlaylist(ActionEvent event) {
 
         Button b = (Button) event.getSource();
         String buttonpresed = b.getText();
 
+        String playlistName = "";
+        ObservableList<String> playlist = playlistViewer.getSelectionModel().getSelectedItems();
+        for (String getFromArray:playlist) {
+            playlistName = getFromArray;
+        }
         if (buttonpresed.equals("Select playlist")){
-
-
+        trackList.setSelectedTracklist(playlistName);
 
         }
-
+        final Node source = (Node) event.getSource();
+        final Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
 
     }
 }

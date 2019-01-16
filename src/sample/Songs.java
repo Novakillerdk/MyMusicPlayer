@@ -11,9 +11,11 @@ public class Songs {
     public ArrayList<songData> trackList = new ArrayList<>();
     public ArrayList<String> playListSong = new ArrayList<>();
     private songData songD = new songData("","","");
+    private songData playList = new songData("","","");
 
     public void addArray()
     {
+        trackList.clear();
         DB.selectSQL("Select fldPath,fldSong,fldArtist from tblSongs");
         do {
             songD = new songData("","","");
@@ -46,6 +48,52 @@ public class Songs {
             }
         } while (true);
 
+    }
+    public void addArrayPlayList(String playListName)
+    {
+        trackList.clear();
+        ArrayList<String> songsInPlaylist = new ArrayList<>();
+
+        DB.selectSQL("Select fldSong from tblPlaylistSong where fldPlaylistName = '"+playListName+"'");
+        do {
+            String data = DB.getData();
+            if (data.equals(DB.NOMOREDATA)) {
+                break;
+            }
+            else
+            {
+                songsInPlaylist.add(data);
+            }
+        } while (true);
+        for (String songName : songsInPlaylist
+             ) {
+            DB.selectSQL("Select fldPath,fldArtist from tblSongs where fldSong = '"+songName+"'");
+            do {
+                String data = DB.getData();
+                playList = new songData("","","");
+                if (data.equals(DB.NOMOREDATA)) {
+                    break;
+                }
+                else
+                {
+                    playList.location = data;
+                    data = DB.getData();
+                    if (data.equals(DB.NOMOREDATA)) {
+                        break;
+                    }
+                    else
+                    {
+                        playList.name = songName;
+                        playList.artist = data;
+                        trackList.add(playList);
+                    }
+                    System.out.println(playList.name);
+                    System.out.println(playList.location);
+                    System.out.println(playList.artist);
+
+                }
+            } while (true);
+        }
     }
     public void setPlayListSongs(String playList)
     {

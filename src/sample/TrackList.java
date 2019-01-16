@@ -13,15 +13,13 @@ public class TrackList {
     private ArrayList<Songs.songData> trackList = new ArrayList<>();
     private ArrayList<String> trackName = new ArrayList<>();
     private ArrayList<String> trackArtist = new ArrayList<>();
-    private ArrayList<String> playLists = new ArrayList<>();
+    private ArrayList<String> ArrayPlaylist = new ArrayList<>();
     private ObservableList listNames= FXCollections.observableArrayList();
+    private static String selectedTracklist = "";
 
     private void addSongName()
     {
-        songList.addArray();
-
         trackName.clear();
-        trackList = songList.getTrackList();
         Iterator itr=trackList.iterator();
         while(itr.hasNext()) {
             Songs.songData st = (Songs.songData) itr.next();
@@ -42,12 +40,12 @@ public class TrackList {
             trackArtist.add(songArt);
         }
     }
-    public void setPlayLists(boolean withCreateNew)
+    public void setArrayPlaylist(boolean withCreateNew)
     {
-        playLists.clear();
+        ArrayPlaylist.clear();
         if (withCreateNew)
         {
-            playLists.add("Create new...");
+            ArrayPlaylist.add("Create new...");
         }
         DB.selectSQL("Select Trim(fldPlaylist) from tblPlaylist");
         do {
@@ -55,19 +53,26 @@ public class TrackList {
             if (data.equals(DB.NOMOREDATA)) {
                 break;
             } else {
-                playLists.add(data);
+                ArrayPlaylist.add(data);
             }
         } while (true);
     }
 
-    public ArrayList<String> getPlayLists() {
-        return playLists;
+    public ArrayList<String> getArrayPlaylist() {
+        return ArrayPlaylist;
     }
 
     public void setListView()
     {
+        songList.addArray();
+        trackList = songList.getTrackList();
         addSongName();
         listNames=FXCollections.observableArrayList(trackName);
+    }
+    public void setPlaylist(String selectedPlaylist)
+    {
+        songList.addArrayPlayList(selectedPlaylist);
+        trackList = songList.getTrackList();
     }
 
     public ArrayList<Songs.songData> getTrackList() {
@@ -78,6 +83,13 @@ public class TrackList {
         return listNames;
     }
 
+    public static void setSelectedTracklist(String selectedTracklist) {
+        TrackList.selectedTracklist = selectedTracklist;
+    }
+
+    public static String getSelectedTracklist() {
+        return selectedTracklist;
+    }
 }
 /*
     private ArrayList<Songs.songData> trackList = new ArrayList<>();
