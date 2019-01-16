@@ -16,6 +16,7 @@ public class TrackList {
     private ArrayList<String> ArrayPlaylist = new ArrayList<>();
     private ObservableList listNames= FXCollections.observableArrayList();
     private static String selectedTracklist = "";
+    private static boolean closedWithSelect = false;
 
     private void addSongName()
     {
@@ -89,6 +90,14 @@ public class TrackList {
 
     public static String getSelectedTracklist() {
         return selectedTracklist;
+    }
+
+    public static void setClosedWithSelect(boolean closedWithSelect) {
+        TrackList.closedWithSelect = closedWithSelect;
+    }
+    public static boolean getClosedWithSelect()
+    {
+        return closedWithSelect;
     }
 }
 /*

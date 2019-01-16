@@ -268,8 +268,10 @@ public class Controller {
             viewPlaylists.setScene(new Scene(root2));
             viewPlaylists.show();
             viewPlaylists.setOnHiding((WindowEvent t)-> {
-                setTrackList.setPlaylist(setTrackList.getSelectedTracklist());
-                setLists(setTrackList.getTrackList());
+                if(setTrackList.getClosedWithSelect()) {
+                    setTrackList.setPlaylist(setTrackList.getSelectedTracklist());
+                    setLists(setTrackList.getTrackList());
+                }
             });
         } catch (Exception e){
             e.printStackTrace();
@@ -301,7 +303,7 @@ public class Controller {
                 if (data.equals(DB.NOMOREDATA)){
                     break;
                 }else{
-                    System.out.print(data);
+                    System.out.print("test : " + data);
                    // ObservableList<String> list = FXCollections.observableArrayList(data);
 
                    // trackTable.setItems(list);
@@ -323,7 +325,7 @@ public class Controller {
                 if (data.equals(DB.NOMOREDATA)){
                     break;
                 }else{
-                    System.out.print(data);
+                    System.out.print("Artist " + data);
                     ObservableList<String> list = FXCollections.observableArrayList(data);
                     for (String searchVal: list) {
                         searchArray.add(searchVal);

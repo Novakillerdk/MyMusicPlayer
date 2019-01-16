@@ -26,6 +26,7 @@ public class viewPlaylist {
     private TrackList trackList = new TrackList();
 
     public void initialize(){
+        trackList.setClosedWithSelect(false);
         setPlaylistViewer();
     }
     public void setPlaylistViewer()
@@ -69,8 +70,8 @@ public class viewPlaylist {
             playlistName = getFromArray;
         }
         if (buttonpresed.equals("Select playlist")){
-        trackList.setSelectedTracklist(playlistName);
-
+            trackList.setClosedWithSelect(true);
+            trackList.setSelectedTracklist(playlistName);
         }
         final Node source = (Node) event.getSource();
         final Stage stage = (Stage) source.getScene().getWindow();

@@ -29,7 +29,7 @@
             <Label fx:id="songName" layoutX="22.0" layoutY="354.0" text="song" />
             <Label fx:id="currentTime" layoutX="114.0" layoutY="325.0" text="Time" />
             <Label fx:id="TTime" layoutX="358.0" layoutY="325.0" text="TTime" />
-            <Button fx:id="createNewPlaylists" layoutX="391.0" layoutY="200.0" mnemonicParsing="false" onAction="#handleNewPlaylist" text="Create new Playlist" />
+            <Button fx:id="createNewPlaylists" layoutX="391.0" layoutY="200.0" mnemonicParsing="false" onAction="#handleNewPlaylist" text="Create / edit playlist" />
             <Button fx:id="allPlaylists" layoutX="391.0" layoutY="173.0" mnemonicParsing="false" onAction="#handlePlaylist" prefHeight="25.0" prefWidth="116.0" text="View all playlists" />
             <Button fx:id="allSongs" layoutX="391.0" layoutY="261.0" mnemonicParsing="false" onAction="#handleAllSongs" prefHeight="25.0" prefWidth="116.0" text="Show all songs" />
             <Slider fx:id="timeSlider" layoutX="150.0" layoutY="327.0" prefHeight="14.0" prefWidth="200.0" snapToTicks="true" value="50.0" />

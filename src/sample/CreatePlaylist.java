@@ -39,6 +39,7 @@ public class CreatePlaylist {
 
     private Songs songList = new Songs();
     private TrackList setTrackList = new TrackList();
+    private boolean isEdit = false;
 
     public void initialize()
     {
@@ -60,6 +61,7 @@ public class CreatePlaylist {
             selectedSongs.getItems().clear();
             playlistName.setVisible(true);
             addPlaylist.setText("Insert");
+            isEdit = false;
         }
         else
         {
@@ -69,6 +71,7 @@ public class CreatePlaylist {
             selectedSongs.setItems(playListSongs);
             playlistName.setVisible(false);
             addPlaylist.setText("Edit");
+            isEdit = true;
         }
     }
     public void setChoiceBox()
@@ -111,26 +114,20 @@ public class CreatePlaylist {
     }
 
     public void ClearPlaylist(ActionEvent event) {
-        /*Button b = (Button) event.getSource();
-        String buttonPressed = b.getText();
-        if(buttonPressed.equals("Clear playlist")){
-
-            ObservableList<String> removeAll;
-            removeAll = selectedSongs.getItems().remove(0);
-
-            for (String removed: removeAll) {
-                selectedSongs.getItems().removeAll(removeAll);
-            }
-
-        }*/
+        selectedSongs.getItems().clear();
     }
-
-    public void sendPlaylist(ActionEvent event) {
-
+    public void sendPlaylist(ActionEvent event)
+    {
+        setPlaylist(isEdit);
+    }
+    public void setPlaylist(boolean isEdit) {
         String nameOfPlaylist = playlistName.getText();
-        System.out.println(nameOfPlaylist);
-
-
+        if (isEdit) {
+            nameOfPlaylist = choicePlaylist.getValue();
+            System.out.println(nameOfPlaylist);
+            DB.deleteSQL("Delete from tblPlaylistSong where fldPlaylistName = '"+nameOfPlaylist+"'");
+            DB.deleteSQL("Delete from tblPlaylist where fldPlaylist = '"+nameOfPlaylist+"'");
+        }
         ArrayList<String> testList = new ArrayList<>(selectedSongs.getItems());
         int songOrder = 0;
 
@@ -172,25 +169,5 @@ public class CreatePlaylist {
         selectedSongs.getItems().clear();
         DB.insertSQL("Insert into tblPlaylist values('"+nameOfPlaylist+"',"+newIndex+")");
         setChoiceBox();
-    }
-
-    public void handleMouseAll(MouseEvent mouseEvent) {
-        selectedSongs.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent click) {
-
-                if (click.getButton() == MouseButton.PRIMARY && click.getClickCount() == 2) {
-
-
-                    ObservableList<String> songSelection;
-                    songSelection = allSongs.getSelectionModel().getSelectedItems();
-
-                    for (String sendSongTo: songSelection) {
-                        songSelection.addAll(sendSongTo);
-                    }
-                }
-
-            }
-        });
     }
 }
