@@ -1,24 +1,34 @@
 package sample;
 
-
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class Songs {
 
     public ArrayList<songData> trackList = new ArrayList<>();
     public ArrayList<String> playListSong = new ArrayList<>();
-    private songData songD = new songData("","","");
-    private songData playList = new songData("","","");
+    private songData songD = new songData("","","",0);
+    private songData playList = new songData("","","",0);
 
-    public void addArray()
+    public void addArray(boolean isSearch,boolean isArtist,String searchInput)
     {
+        int songCounter = 0;
         trackList.clear();
-        DB.selectSQL("Select fldPath,fldSong,fldArtist from tblSongs");
+        if(isSearch)
+        {
+            if (isArtist)
+            {
+                DB.selectSQL("Select fldPath,fldSong,fldArtist from tblSongs WHERE fldArtist like '%"+ searchInput +"%' ");
+            }
+            else
+            {
+                DB.selectSQL("Select fldPath,fldSong,fldArtist from tblSongs WHERE fldSong like '%"+ searchInput +"%' ");
+            }
+        }
+        else {
+            DB.selectSQL("Select fldPath,fldSong,fldArtist from tblSongs");
+        }
         do {
-            songD = new songData("","","");
+            songD = new songData("","","",0);
             String data = DB.getData();
             if (data.equals(DB.NOMOREDATA)) {
                 break;
@@ -40,7 +50,8 @@ public class Songs {
                     else
                     {
                         songD.artist = data;
-
+                        songD.songOrder = songCounter;
+                        songCounter++;
                     }
                     trackList.add(songD);
                 }
@@ -51,6 +62,7 @@ public class Songs {
     }
     public void addArrayPlayList(String playListName)
     {
+        int songCounter = 0;
         trackList.clear();
         ArrayList<String> songsInPlaylist = new ArrayList<>();
 
@@ -70,7 +82,7 @@ public class Songs {
             DB.selectSQL("Select fldPath,fldArtist from tblSongs where fldSong = '"+songName+"'");
             do {
                 String data = DB.getData();
-                playList = new songData("","","");
+                playList = new songData("","","",0);
                 if (data.equals(DB.NOMOREDATA)) {
                     break;
                 }
@@ -83,14 +95,13 @@ public class Songs {
                     }
                     else
                     {
+
+                        playList.songOrder = songCounter;
+                        songCounter++;
                         playList.name = songName;
                         playList.artist = data;
                         trackList.add(playList);
                     }
-                    System.out.println(playList.name);
-                    System.out.println(playList.location);
-                    System.out.println(playList.artist);
-
                 }
             } while (true);
         }
@@ -119,11 +130,13 @@ public class Songs {
     public static class songData
     {
         String location, name, artist;
-        songData(String loc,String name,String artist)
+        int songOrder;
+        songData(String loc,String name,String artist,int songOrder)
         {
             this.location = loc;
             this.name = name;
             this.artist = artist;
+            this.songOrder = songOrder;
         }
 
         public String getName() {
@@ -136,6 +149,10 @@ public class Songs {
 
         public String getArtist() {
             return artist;
+        }
+
+        public int getSongOrder() {
+            return songOrder;
         }
     }
 }

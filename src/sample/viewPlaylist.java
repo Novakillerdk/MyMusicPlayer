@@ -7,21 +7,16 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.input.InputEvent;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-import java.util.Observable;
 
 public class viewPlaylist {
 
 
     @FXML ListView playlistViewer;
-    @FXML Button removePlaylist;
     @FXML Button selectPlaylist;
 
-    private Songs songList = new Songs();
-    private Controller getControllerMethods = new Controller();
     private ArrayList<String> playlistArray = new ArrayList<>();
     private TrackList trackList = new TrackList();
 

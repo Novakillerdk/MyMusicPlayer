@@ -26,7 +26,6 @@ import javafx.stage.WindowEvent;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -37,10 +36,6 @@ public class Controller {
     private Button playPause;
     @FXML
     private Button stopButton;
-    @FXML
-    private Button searchArtist;
-    @FXML
-    private Button searchSong;
 
     @FXML
     private MediaView mediaPlayer;
@@ -67,7 +62,6 @@ public class Controller {
 
     private ArrayList<Songs.songData> trackList = new ArrayList<>();
     private TrackList setTrackList = new TrackList();
-    private Songs trySong = new Songs();
 
     private boolean isPlaying = false;
     private String playPath = new File("src/sample/media/Play.png").getAbsolutePath();
@@ -79,6 +73,7 @@ public class Controller {
 
     private String path;
     private String songN;
+    private int currentSongNum = 0;
 
     private Timer updateTimer = new Timer();
 
@@ -89,18 +84,21 @@ public class Controller {
         stopButton.setContentDisplay(ContentDisplay.CENTER);
         stopButton.setGraphic(new ImageView(stopImg));
 
-        setTrackList.setListView();
+        setTrackList.setListView(false,false,null);
         setLists(setTrackList.getTrackList());
 
         trackList = setTrackList.getTrackList();
 
-        path = new File(trackList.get(0).location).getAbsolutePath();
+        currentSongNum = 0;
+        path = new File(trackList.get(currentSongNum).location).getAbsolutePath();
         setSong();
+        songN = trackList.get(currentSongNum).name;
+        songName.setText(songN);
 
         mp.setAutoPlay(false);
-
-
+        
         setTimeSlider();
+
     }
     private void setTimeSlider()
     {
@@ -110,6 +108,12 @@ public class Controller {
                 updatesSlider();
             }
         });
+        TimerTask tt = new TimerTask() {
+            @Override
+            public void run() {
+                updatesValues();
+            }
+        }; updateTimer.schedule(tt,30);
     }
     @FXML
     private void handlePlayListChoose(MouseEvent arg0)
@@ -128,6 +132,7 @@ public class Controller {
                         if(trackTable.getSelectionModel().getSelectedItem().equals(trackList.get(i)))
                             {
                              path = new File(trackList.get(i).location).getAbsolutePath();
+                             currentSongNum = i;
                             songN = trackList.get(i).name;
                             break;
                         }
@@ -149,15 +154,48 @@ public class Controller {
         mp = new MediaPlayer(me);
         mediaPlayer.setMediaPlayer(mp);
         updateTimer = new Timer();
-        TimerTask tt = new TimerTask() {
+        mp.setOnReady(new Runnable() {
             @Override
             public void run() {
-                updatesValues();
+                long endFormat = (long) me.getDuration().toMillis();
+                TTime.setText(formatTimer(endFormat));
             }
-        }; updateTimer.schedule(tt,30);
+        });
+        mp.setOnEndOfMedia(new Runnable() {
+            @Override public void run() {
+                goNextSong();
+            }
+        });
+        addTimeListener();
         setTimeSlider();
     }
-
+    private void goNextSong()
+    {
+        boolean isLastSong = false;
+        if(currentSongNum + 1 == trackList.size())
+        {
+            currentSongNum = 0;
+            isLastSong = true;
+        }
+        else
+        {
+            currentSongNum = currentSongNum + 1;
+            isLastSong = false;
+        }
+        trackTable.getSelectionModel().select(currentSongNum);
+        path = new File(trackList.get(currentSongNum).location).getAbsolutePath();
+        songN = trackList.get(currentSongNum).name;
+        songName.setText(songN);
+        setSong();
+        mp.play();
+        if(isLastSong)
+        {
+            isPlaying = false;
+            playPause.setGraphic(new ImageView(playImg));
+            mp.pause();
+            timeSlider.setValue(0);
+        }
+    }
     @FXML
     private void handlePlayPause (ActionEvent event)
     {
@@ -172,9 +210,6 @@ public class Controller {
             isPlaying = true;
             playPause.setGraphic(new ImageView(pauseImg));
             mp.play();
-
-            addTimeListener();
-            setTimeSlider();
         }
     }
     private void addTimeListener() {
@@ -208,7 +243,6 @@ public class Controller {
     {
 
         ObservableList<Songs.songData> list = FXCollections.observableArrayList(playList);
-        System.out.println(list);
         trackTableSong.setCellValueFactory(new PropertyValueFactory<>("name"));
         trackTableArtist.setCellValueFactory(new PropertyValueFactory<>("artist"));
         trackTable.setItems(list);
@@ -228,10 +262,6 @@ public class Controller {
             {
                 long secFormat = (long) mp.getCurrentTime().toMillis();
                 currentTime.setText(formatTimer(secFormat));
-
-                long endFormat = (long) mp.getStopTime().toMillis();
-                TTime.setText(formatTimer(endFormat));
-
                 updateTimer.cancel();
             }
         });
@@ -279,67 +309,26 @@ public class Controller {
 
     }
     public void handleAllSongs(ActionEvent actionEvent) {
-        setTrackList.setListView();
+        setTrackList.setListView(false,false,null);
         setLists(setTrackList.getTrackList());
     }
     public void handleSearch(ActionEvent event) {
 
-
-       ArrayList<String> searchArray = new ArrayList<>();
-
+        boolean isArtist = false;
 
         Button b = (Button) event.getSource();
         String buttonPressed = b.getText();
 
         if (buttonPressed.equals("Search for song")) {
-            String contentName = getContent.getText();
-
-            DB.selectSQL("Select fldSong from tblSongs WHERE fldSong like '%"+ contentName +"%' ");
-
-
-
-            do{
-                String data = DB.getData();
-                if (data.equals(DB.NOMOREDATA)){
-                    break;
-                }else{
-                    System.out.print("test : " + data);
-                   // ObservableList<String> list = FXCollections.observableArrayList(data);
-
-                   // trackTable.setItems(list);
-                }
-                ObservableList<String> list = FXCollections.observableArrayList(data);
-                searchArray.addAll(list);
-                trackTable.setItems(list);
-            } while(true);
-
+            isArtist = false;
         }
 
         if (buttonPressed.equals("Search for artist")){
-            String contentName = getContent.getText();
-            DB.selectSQL("Select fldArtist from tblSongs WHERE fldArtist like '%"+ contentName +"%' ");
-
-
-            do{
-                String data = DB.getData();
-                if (data.equals(DB.NOMOREDATA)){
-                    break;
-                }else{
-                    System.out.print("Artist " + data);
-                    ObservableList<String> list = FXCollections.observableArrayList(data);
-                    for (String searchVal: list) {
-                        searchArray.add(searchVal);
-                    }
-                    System.out.println(searchArray);
-                    System.out.println(list);
-                }
-
-
-
-            } while(true);
-
+            isArtist = true;
         }
-
+        String searchInput = getContent.getText();
+        setTrackList.setListView(true,isArtist,searchInput);
+        setLists(setTrackList.getTrackList());
     }
 
     public void handleAddSong(ActionEvent event) throws Exception {

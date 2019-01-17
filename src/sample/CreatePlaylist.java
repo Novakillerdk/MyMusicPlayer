@@ -1,18 +1,16 @@
 package sample;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
 
@@ -22,14 +20,6 @@ public class CreatePlaylist {
     private ListView allSongs;
     @FXML
     private ListView selectedSongs;
-    @FXML
-    private Button addSongTo;
-    @FXML
-    private Button removeSong;
-    @FXML
-    private Button clearPlaylist;
-    @FXML
-    private Button refreshSongs;
     @FXML
     private Button addPlaylist;
     @FXML
@@ -43,8 +33,8 @@ public class CreatePlaylist {
 
     public void initialize()
     {
-        songList.addArray();
-        setTrackList.setListView();
+        songList.addArray(false,false,null);
+        setTrackList.setListView(false,false,null);
         allSongs.setItems(setTrackList.getList());
         setChoiceBox();
 
@@ -65,7 +55,6 @@ public class CreatePlaylist {
         }
         else
         {
-            System.out.println(chosenPlay);
             songList.setPlayListSongs(chosenPlay);
             ObservableList<String> playListSongs = FXCollections.observableArrayList(songList.getPlayListSongs());
             selectedSongs.setItems(playListSongs);
@@ -121,53 +110,60 @@ public class CreatePlaylist {
         setPlaylist(isEdit);
     }
     public void setPlaylist(boolean isEdit) {
+        boolean isEmpty = false;
         String nameOfPlaylist = playlistName.getText();
         if (isEdit) {
             nameOfPlaylist = choicePlaylist.getValue();
-            System.out.println(nameOfPlaylist);
+
+            ArrayList<String> testList = new ArrayList<>(selectedSongs.getItems());
+            if(testList.isEmpty()) {
+                isEmpty = true;
+            }
+
             DB.deleteSQL("Delete from tblPlaylistSong where fldPlaylistName = '"+nameOfPlaylist+"'");
             DB.deleteSQL("Delete from tblPlaylist where fldPlaylist = '"+nameOfPlaylist+"'");
         }
-        ArrayList<String> testList = new ArrayList<>(selectedSongs.getItems());
-        int songOrder = 0;
+        if(!isEmpty) {
+            ArrayList<String> selectedList = new ArrayList<>(selectedSongs.getItems());
+            int songOrder = 0;
 
-        for (String songName : testList) {
-            songOrder++;
-            DB.insertSQL("Insert into tblPlaylistSong values('"+nameOfPlaylist+"','"+songName+"',"+songOrder+")");
-        }
-        ArrayList<Integer> indexDataArray = new ArrayList<>();
-
-        DB.selectSQL("Select fldIndex from tblPlaylist order by fldIndex asc");
-        do {
-            String indexDataStr = DB.getData();
-
-            if (indexDataStr.equals(DB.NOMOREDATA)) {
-                break;
-            } else {
-                int indexData = Integer.valueOf(indexDataStr);
-                indexDataArray.add(indexData);
+            for (String songName : selectedList) {
+                songOrder++;
+                DB.insertSQL("Insert into tblPlaylistSong values('" + nameOfPlaylist + "','" + songName + "'," + songOrder + ")");
             }
-        } while (true);
 
-        int indexCounter = 1;
-        boolean indexDone = false;
-        int newIndex = 1;
-        for (int tryNumber: indexDataArray
-             ) {
-            if(indexCounter != tryNumber && !indexDone)
-            {
-                indexDone = true;
+            ArrayList<Integer> indexDataArray = new ArrayList<>();
+            DB.selectSQL("Select fldIndex from tblPlaylist order by fldIndex asc");
+            do {
+                String indexDataStr = DB.getData();
+
+                if (indexDataStr.equals(DB.NOMOREDATA)) {
+                    break;
+                } else {
+                    int indexData = Integer.valueOf(indexDataStr);
+                    indexDataArray.add(indexData);
+                }
+            } while (true);
+
+            int indexCounter = 1;
+            boolean indexDone = false;
+            int newIndex = 1;
+            for (int tryNumber : indexDataArray
+            ) {
+                if (indexCounter != tryNumber && !indexDone) {
+                    indexDone = true;
+                    newIndex = indexCounter;
+                }
+                indexCounter++;
+            }
+            if (!indexDone) {
                 newIndex = indexCounter;
             }
-            indexCounter++;
+            playlistName.clear();
+            selectedSongs.getItems().clear();
+            DB.insertSQL("Insert into tblPlaylist values('" + nameOfPlaylist + "'," + newIndex + ")");
         }
-        if(!indexDone)
-        {
-            newIndex = indexCounter;
-        }
-        playlistName.clear();
-        selectedSongs.getItems().clear();
-        DB.insertSQL("Insert into tblPlaylist values('"+nameOfPlaylist+"',"+newIndex+")");
+
         setChoiceBox();
     }
 }

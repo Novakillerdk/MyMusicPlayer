@@ -12,7 +12,6 @@ public class TrackList {
 
     private ArrayList<Songs.songData> trackList = new ArrayList<>();
     private ArrayList<String> trackName = new ArrayList<>();
-    private ArrayList<String> trackArtist = new ArrayList<>();
     private ArrayList<String> ArrayPlaylist = new ArrayList<>();
     private ObservableList listNames= FXCollections.observableArrayList();
     private static String selectedTracklist = "";
@@ -26,19 +25,6 @@ public class TrackList {
             Songs.songData st = (Songs.songData) itr.next();
             String songN = st.getName();
             trackName.add(songN);
-        }
-    }
-    private void addSongArtist()
-    {
-        songList.addArray();
-
-        trackArtist.clear();
-        trackList = songList.getTrackList();
-        Iterator itr=trackList.iterator();
-        while(itr.hasNext()) {
-            Songs.songData st = (Songs.songData) itr.next();
-            String songArt = st.getArtist();
-            trackArtist.add(songArt);
         }
     }
     public void setArrayPlaylist(boolean withCreateNew)
@@ -63,9 +49,9 @@ public class TrackList {
         return ArrayPlaylist;
     }
 
-    public void setListView()
+    public void setListView(boolean isSearch,boolean isArtist,String searchInput)
     {
-        songList.addArray();
+        songList.addArray(isSearch,isArtist,searchInput);
         trackList = songList.getTrackList();
         addSongName();
         listNames=FXCollections.observableArrayList(trackName);
@@ -100,26 +86,3 @@ public class TrackList {
         return closedWithSelect;
     }
 }
-/*
-    private ArrayList<Songs.songData> trackList = new ArrayList<>();
-    private ArrayList<String> trackList1 = new ArrayList<>();
-
-    public void initialize()
-    {
-        songList.addArray();
-    }
-    public void handleRefresh(ActionEvent event)  {
-
-        trackList1.clear();
-        trackList = songList.getTrackList();
-        Iterator itr=trackList.iterator();
-        while(itr.hasNext()) {
-            Songs.songData st = (Songs.songData) itr.next();
-            String songN = st.name;
-            trackList1.add(songN);
-        }
-            ObservableList list=FXCollections.observableArrayList(trackList1);
-            allSongs.setItems(list);
-
-    }
-    */
