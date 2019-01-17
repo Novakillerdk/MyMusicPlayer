@@ -77,6 +77,11 @@ public class Controller {
 
     private Timer updateTimer = new Timer();
 
+    /**
+     * Will initialize as soon as the program is started
+     * Sets the graphic for the play and stop button, and sets up the table view
+     * Sets up the first song in the song list, including the song label.
+     */
     public void initialize() {
         playPause.setContentDisplay(ContentDisplay.CENTER);
         playPause.setGraphic(new ImageView(playImg));
@@ -96,10 +101,15 @@ public class Controller {
         songName.setText(songN);
 
         mp.setAutoPlay(false);
-        
+
         setTimeSlider();
 
     }
+
+    /**
+     * This add a listener to the slider
+     * which follows the the updated duration of the song
+     */
     private void setTimeSlider()
     {
         mp.currentTimeProperty().addListener(new InvalidationListener() {
@@ -115,6 +125,13 @@ public class Controller {
             }
         }; updateTimer.schedule(tt,30);
     }
+
+    /**
+     * This method will select a song, and get the information needed
+     * to setup the current song to the one the user wants to select.
+     * It will set the song label to the selected song, and starts it automaticly
+     * @param arg0
+     */
     @FXML
     private void handlePlayListChoose(MouseEvent arg0)
     {
@@ -130,9 +147,9 @@ public class Controller {
 
                     for (int i = 0; i < trackList.size(); i++) {
                         if(trackTable.getSelectionModel().getSelectedItem().equals(trackList.get(i)))
-                            {
-                             path = new File(trackList.get(i).location).getAbsolutePath();
-                             currentSongNum = i;
+                        {
+                            path = new File(trackList.get(i).location).getAbsolutePath();
+                            currentSongNum = i;
                             songN = trackList.get(i).name;
                             break;
                         }
@@ -148,6 +165,11 @@ public class Controller {
         });
     }
 
+    /**
+     * This method sets a selected song to start playing
+     * It will update the total duration of the song the moment it is ready,
+     * and add a "setOnEndOfMedia" to be able to go to goNextSong
+     */
     private void setSong ()
     {
         me = new Media(new File(path).toURI().toString());
@@ -169,6 +191,12 @@ public class Controller {
         addTimeListener();
         setTimeSlider();
     }
+
+    /**
+     * When a song has ended, this method will make sure that
+     * the next song on the list will start playing,
+     * and if it is the last song, it will go back to the first without playing
+     */
     private void goNextSong()
     {
         boolean isLastSong = false;
@@ -196,6 +224,15 @@ public class Controller {
             timeSlider.setValue(0);
         }
     }
+
+    /**
+     * When the user clicks on the pause/play icon
+     * the current song will be paused or start playing again
+     * given it's current state
+     * It will also change the icon of the button,
+     * between play and pause depending on the state
+     * @param event Upon clicking the play / pause button
+     */
     @FXML
     private void handlePlayPause (ActionEvent event)
     {
@@ -212,6 +249,13 @@ public class Controller {
             mp.play();
         }
     }
+
+    /**
+     * This method adds a listener to the current song
+     * it will keep track of the songs current time.
+     * It also adds the function to use the slider
+     * to skip back and forth in the song.
+     */
     private void addTimeListener() {
         mp.currentTimeProperty().addListener(new InvalidationListener() {
             @Override
@@ -228,6 +272,13 @@ public class Controller {
             }
         });
     }
+
+    /**
+     * When the user pressed the stop icon
+     * then this method stops the song
+     * and then resets the time
+     * @param event Upon clicking the stop button
+     */
     @FXML
     private void handleStopMedia (ActionEvent event)
     {
@@ -239,6 +290,11 @@ public class Controller {
         mp.stop();
     }
 
+    /**
+     * This method adds all the songs from the media folder
+     * to the table view list
+     * @param playList An arrayList for all the songs to put into the table view
+     */
     public void setLists(ArrayList<Songs.songData> playList)
     {
 
@@ -248,6 +304,11 @@ public class Controller {
         trackTable.setItems(list);
     }
 
+    /**
+     * This method formats the songs total duration into MM:SS
+     * @param formatTime The time to change into the format
+     * @return Returns the time in the given format
+     */
     private String formatTimer(long formatTime)
     {
         return  String.format("%02d : %02d",
@@ -255,6 +316,11 @@ public class Controller {
                 TimeUnit.MILLISECONDS.toSeconds(formatTime) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(formatTime)));
     }
+
+    /**
+     * This method will set a listener
+     * to update the current time of the song while it plays
+     */
     private void updatesValues()
     {
         Platform.runLater(new Runnable() {
@@ -265,22 +331,12 @@ public class Controller {
                 updateTimer.cancel();
             }
         });
-
     }
 
-    public void handleNewPlaylist(ActionEvent event) throws Exception{
-        try {
-            Stage newPlaylist = new Stage();
-            Parent root1 = FXMLLoader.load(getClass().getResource("createPlaylist.fxml"));
-            newPlaylist.setTitle("Hello World");
-            newPlaylist.setScene(new Scene(root1));
-            newPlaylist.show();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-
-    }
-
+    /**
+     * This method will set a listener
+     * to update the position of the slider, based on the current time of the song
+     */
     protected void updatesSlider()
     {
         Platform.runLater(new Runnable() {
@@ -290,28 +346,77 @@ public class Controller {
             }
         });
     }
+
+
+    /**
+     * This method will create a new window
+     * where the user can create new playlists and edit their current playlists
+     * @param event Upon clicking "Create / edit playlist"
+     * @throws Exception
+     */
+    public void handleNewPlaylist(ActionEvent event) throws Exception{
+        try {
+            Stage newPlaylist = new Stage();
+            Parent root1 = FXMLLoader.load(getClass().getResource("createPlaylist.fxml"));
+            newPlaylist.setTitle("Create / edit playlist");
+            newPlaylist.setScene(new Scene(root1));
+            newPlaylist.show();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * This methods will open up a new window where the user can select or delete a playlist
+     * Upon selecting a playlist, it will setup the table view to the list of songs from the selected playlist
+     * @param event Upon clicking the "view playlist" button
+     * @throws Exception
+     */
     public void handlePlaylist(ActionEvent event) throws Exception{
         try {
             Stage viewPlaylists = new Stage();
             Parent root2 = FXMLLoader.load(getClass().getResource("viewPlaylist.fxml"));
-            viewPlaylists.setTitle("Hello World");
+            viewPlaylists.setTitle("View all playlists");
             viewPlaylists.setScene(new Scene(root2));
             viewPlaylists.show();
             viewPlaylists.setOnHiding((WindowEvent t)-> {
                 if(setTrackList.getClosedWithSelect()) {
                     setTrackList.setPlaylist(setTrackList.getSelectedTracklist());
                     setLists(setTrackList.getTrackList());
+                    mp.stop();
+                    path = new File(trackList.get(0).location).getAbsolutePath();
+                    currentSongNum = 0;
+                    songN = trackList.get(currentSongNum).name;
+                    songName.setText(songN);
+                    setSong();
+
+                    isPlaying = false;
+                    playPause.setGraphic(new ImageView(playImg));
+
+                    addTimeListener();
+                    setTimeSlider();
                 }
             });
         } catch (Exception e){
             e.printStackTrace();
         }
-
     }
+
+    /**
+     * This will reset the table view to all songs in the current database
+     * @param actionEvent Upon clicking "Show all songs"
+     */
     public void handleAllSongs(ActionEvent actionEvent) {
         setTrackList.setListView(false,false,null);
         setLists(setTrackList.getTrackList());
     }
+
+    /**
+     * This method will search the database from the users input
+     * if it finds the searched content it will set the table view to songs found.
+     * @param event Upon clicking "search by artist" or "search by song", while a value has been input into search
+     */
     public void handleSearch(ActionEvent event) {
 
         boolean isArtist = false;
@@ -331,6 +436,12 @@ public class Controller {
         setLists(setTrackList.getTrackList());
     }
 
+    /**
+     * This method opens up a file browser where the user can select a new song
+     * which they wish to add to their media player
+     * @param event
+     * @throws Exception
+     */
     public void handleAddSong(ActionEvent event) throws Exception {
 
         try {
@@ -360,3 +471,4 @@ public class Controller {
         }
     }
 }
+
