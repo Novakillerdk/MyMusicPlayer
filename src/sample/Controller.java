@@ -439,7 +439,7 @@ public class Controller {
     /**
      * This method opens up a file browser where the user can select a new song
      * which they wish to add to their media player
-     * @param event
+     * @param event Upon clicking "Add songs"
      * @throws Exception
      */
     public void handleAddSong(ActionEvent event) throws Exception {

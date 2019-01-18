@@ -26,9 +26,9 @@
    <children>
       <AnchorPane prefHeight="400.0" prefWidth="665.0">
          <children>
-            <Button fx:id="playPause" alignment="CENTER" contentDisplay="CENTER" layoutX="161.0" layoutY="354.0" maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" mnemonicParsing="false" onAction="#handlePlayPause" textAlignment="CENTER" />
+            <Button fx:id="playPause" alignment="CENTER" contentDisplay="CENTER" layoutX="211.0" layoutY="355.0" maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" mnemonicParsing="false" onAction="#handlePlayPause" textAlignment="CENTER" />
             <MediaView fx:id="mediaPlayer" fitHeight="200.0" fitWidth="200.0" layoutX="100.0" layoutY="73.0" />
-            <Button fx:id="stopButton" alignment="CENTER" contentDisplay="CENTER" layoutX="208.0" layoutY="354.0" maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" mnemonicParsing="false" onAction="#handleStopMedia" textAlignment="CENTER" />
+            <Button fx:id="stopButton" alignment="CENTER" contentDisplay="CENTER" layoutX="258.0" layoutY="355.0" maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" mnemonicParsing="false" onAction="#handleStopMedia" textAlignment="CENTER" />
             <Label layoutX="14.0" layoutY="325.0" text="Current song:" />
             <Label fx:id="songName" layoutX="22.0" layoutY="354.0" text="song" />
             <Label fx:id="currentTime" layoutX="114.0" layoutY="325.0" text="Time" />
@@ -41,8 +41,8 @@
             <Button fx:id="addSong" layoutX="391.0" layoutY="230.0" mnemonicParsing="false" onAction="#handleAddSong" text="Add song to tracklist" />
             <TableView fx:id="trackTable" layoutX="15.0" layoutY="14.0" onMouseClicked="#handlePlayListChoose" prefHeight="298.0" prefWidth="371.0">
               <columns>
-                  <TableColumn fx:id="trackTableSong" prefWidth="187.0" text="Songs" />
-                  <TableColumn fx:id="trackTableArtist" prefWidth="187.0" text="Artist" />
+                  <TableColumn fx:id="trackTableSong" prefWidth="187.0" sortable="false" text="Songs" />
+                  <TableColumn fx:id="trackTableArtist" prefWidth="183.0" sortable="false" text="Artist" />
               </columns>
             </TableView>
             <Button fx:id="searchArtist" layoutX="391.0" layoutY="73.0" mnemonicParsing="false" onAction="#handleSearch" text="Search for artist" />
